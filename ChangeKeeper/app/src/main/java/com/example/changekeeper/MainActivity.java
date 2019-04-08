@@ -1,6 +1,5 @@
 package com.example.changekeeper;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,21 +8,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.Buffer;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
     /* TO DO:
@@ -33,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         4.Implement RegisterIncome
         5.Change TopBar
      */
+
+    public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "MainAct";
 
     private String walletAmount;
@@ -63,10 +54,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void goToExpense(View view){
-        Intent intent = new Intent(this, RegExpenseScreenWallet.class);
+    public void goToExpenseWallet(View view){
+        Intent intent = new Intent(this, RegExpenseScreen.class);
+        String message = "EXPENSE-WALLET";
+        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
+
+    public void goToExpenseCard(View view){
+        Intent intent = new Intent(this, RegExpenseScreen.class);
+        String message = "EXPENSE-CARD";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
+   /* public void goToIncomeWallet(View view){
+        Intent intent = new Intent(this, RegIncomeScreen.class);
+        String message = "INCOME-WALLET";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
+    public void goToIncomeCard(View view){
+        Intent intent = new Intent(this, RegIncomeScreen.class);
+        String message = "INCOME-WALLET";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }*/
 
     private void writeFile(){
         try{
