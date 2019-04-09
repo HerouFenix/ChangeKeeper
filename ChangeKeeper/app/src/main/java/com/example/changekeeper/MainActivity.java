@@ -1,9 +1,16 @@
 package com.example.changekeeper;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,11 +35,40 @@ public class MainActivity extends AppCompatActivity {
 
     private String walletAmount;
     private String cardAmount;
+    private ActionBar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolbar = getSupportActionBar();
+
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.navigation_home);
+        navigation.setOnNavigationItemSelectedListener((item) -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_subscriptions:
+                    toolbar.setTitle("My Subscriptions");
+                    return true;
+                case R.id.navigation_allowances:
+                    toolbar.setTitle("My Allowances");
+                    goToExpenseWallet(this.findViewById(android.R.id.content)); // alterar isto!!! mas bascially ja ta
+                    return true;
+                case R.id.navigation_home:
+                    toolbar.setTitle("ChangeKeeper");
+                    return true;
+                case R.id.navigation_loans:
+                    toolbar.setTitle("My Loans");
+                    return true;
+                case R.id.navigation_info:
+                    toolbar.setTitle("Info");
+                    return true;
+            }
+            return false;
+        });
+
         Log.v(TAG,"HELLOOOOOOOOOOOOOOOOOOOOOOOO :D");
 
         //In case the file doesn't exist yet
@@ -47,11 +83,19 @@ public class MainActivity extends AppCompatActivity {
 
         if(!found){
             writeFile();
-        };
+        }
 
         //Show Money Values
         readFile();
 
+    }
+
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void goToExpenseWallet(View view){
