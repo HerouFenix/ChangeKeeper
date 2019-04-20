@@ -38,6 +38,11 @@ public class FrequencyDialogue extends AppCompatDialogFragment{
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                })
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         String frequency = ((TextView)view.findViewById(R.id.frequency)).getText().toString();
                         String type = spinner.getSelectedItem().toString();
                         ArrayList<String> days = new ArrayList<>();
@@ -57,11 +62,6 @@ public class FrequencyDialogue extends AppCompatDialogFragment{
                             days.add("Sunday");
 
                         listener.updateFrequencies(frequency,type,days);
-                    }
-                })
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
                     }
                 });
 

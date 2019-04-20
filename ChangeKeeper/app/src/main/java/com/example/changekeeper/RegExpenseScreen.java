@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,16 +68,21 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
+        ActionBar toolbar = getSupportActionBar();
 
         setContentView(R.layout.activity_reg_expense_screen);
 
         switch(message){
             case "EXPENSE-WALLET":
                 this.typeFlag = 0;
+                toolbar.setTitle("Register Expense - Wallet");
+
                 break;
 
             case "EXPENSE-CARD":
                 this.typeFlag = 1;
+                toolbar.setTitle("Register Expense - Card");
+
                 break;
 
             default:
@@ -106,8 +112,8 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month++; //We do this cus by default January = 0
-                String date = day+" / "+month+" / "+year;
+                month = month+1; //We do this cus by default January = 0
+                String date = day+"/"+month+"/"+year;
                 mDisplayDate.setText(date);
             }
         };
@@ -339,7 +345,10 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
         //Register
         writeFile();
-        updateWallet();
+        Calendar cal = Calendar.getInstance();
+
+        if(cal.get(Calendar.DAY_OF_MONTH) == Integer.parseInt(this.date.split("/")[0]) && (cal.get(Calendar.MONTH)+1) == Integer.parseInt(this.date.split("/")[1]) && cal.get(Calendar.YEAR) == Integer.parseInt(this.date.split("/")[2]))
+            updateWallet();
 
         Toast toast = Toast.makeText(this,"Expense Regitered Successfully", Toast.LENGTH_SHORT);
 

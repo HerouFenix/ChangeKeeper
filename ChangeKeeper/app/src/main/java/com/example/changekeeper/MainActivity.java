@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
         setContentView(R.layout.activity_main);
 
         toolbar = getSupportActionBar();
+        toolbar.setTitle("ChangeKeeper");
 
         this.mPager = (ViewPager) findViewById(R.id.typeSelector);
         this.pageAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -72,20 +73,16 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
         navigation.setOnNavigationItemSelectedListener((item) -> {
             switch (item.getItemId()) {
                 case R.id.navigation_subscriptions:
-                    toolbar.setTitle("My Subscriptions");
+                    startActivity(new Intent(this, SubscriptionScreen.class));
                     return true;
                 case R.id.navigation_allowances:
-                    toolbar.setTitle("My Allowances");
-                    goToExpense(this.findViewById(android.R.id.content)); // alterar isto!!! mas bascially ja ta
+                    startActivity(new Intent(this, AllowanceScreen.class));
                     return true;
                 case R.id.navigation_home:
-                    toolbar.setTitle("ChangeKeeper");
                     return true;
                 case R.id.navigation_loans:
-                    toolbar.setTitle("My Loans");
                     return true;
                 case R.id.navigation_info:
-                    toolbar.setTitle("Info");
                     return true;
             }
             return false;
@@ -171,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
             startActivity(intent);
         }
     }
+
 
     public void openTransferDialogue(View view){
         TransferDialogue transferDialogue = new TransferDialogue();

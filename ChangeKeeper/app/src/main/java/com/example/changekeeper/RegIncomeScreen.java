@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,16 +64,19 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
+        ActionBar toolbar = getSupportActionBar();
 
         setContentView(R.layout.activity_reg_income_screen);
 
         switch(message){
             case "INCOME-WALLET":
                 this.typeFlag = 0;
+                toolbar.setTitle("Register Income - Wallet");
                 break;
 
             case "INCOME-CARD":
                 this.typeFlag = 1;
+                toolbar.setTitle("Register Income - Card");
                 break;
 
             default:
@@ -102,8 +106,8 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month++; //We do this cus by default January = 0
-                String date = day+" / "+month+" / "+year;
+                month = month+1; //We do this cus by default January = 0
+                String date = day+"/"+month+"/"+year;
                 mDisplayDate.setText(date);
             }
         };
@@ -179,11 +183,11 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
                     this.frequencyType = "Day";
                     break;
                 case ("Every month"):
-                    this.frequency = "30";
+                    this.frequency = "1";
                     this.frequencyType = "Month";
                     break;
                 case ("Every week"):
-                    this.frequency = "7";
+                    this.frequency = "1";
                     this.frequencyType = "Week";
                     break;
 
@@ -211,9 +215,13 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         this.amount = Double.parseDouble(editText.getText().toString());
         this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
 
+
         //Register
         writeFile();
-        updateWallet();
+        Calendar cal = Calendar.getInstance();
+
+        if(cal.get(Calendar.DAY_OF_MONTH) == Integer.parseInt(this.date.split("/")[0]) && (cal.get(Calendar.MONTH)+1) == Integer.parseInt(this.date.split("/")[1]) && cal.get(Calendar.YEAR) == Integer.parseInt(this.date.split("/")[2]))
+            updateWallet();
 
         Toast toast = Toast.makeText(this,"Income Regitered Successfully", Toast.LENGTH_SHORT);
 
@@ -239,8 +247,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
                 fileOutputStream = openFileOutput("UserIncomes.txt", MODE_APPEND);
             }
 
-
-            //Register Template: WALLET/CARD - Amount - Date - Frequency
+            //Register Template: WALLET/CARD - Amount - Date - FrequencyType - Frequency - Weekdays
             String type;
 
             // String frequency = ""; /*TO DO*/
@@ -250,7 +257,6 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             }else{
                 type = "CARD";
             }
-
             StringBuilder register = new StringBuilder();
             register.append(type);
             register.append("-");
@@ -262,7 +268,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             register.append("-");
             register.append(this.frequency);
             register.append("-");
-            register.append(this.weekdays);
+            register.append(this.weekdays+"\n");
 
             fileOutputStream.write(register.toString().getBytes());
             fileOutputStream.close();
