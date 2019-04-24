@@ -21,9 +21,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class SubscriptionScreen extends AppCompatActivity implements MoreDialogue.MoreDialogueListener {
+public class SubscriptionScreen extends AppCompatActivity implements MoreDialogueSubscription.MoreDialogueListener {
     private static final String TAG = "Subscriptions Screen";
-    private ArrayList<String> ourAllowances;
+    private ArrayList<String> ourSubscriptions;
     private TableLayout mTableLayout;
     private ArrayList<TableRow> rows = new ArrayList<>();
 
@@ -50,6 +50,7 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
                     startActivity(new Intent(this, MainActivity.class));
                     return true;
                 case R.id.navigation_loans:
+                    startActivity(new Intent(this, LoanScreen.class));
                     return true;
                 case R.id.navigation_info:
                     return true;
@@ -63,8 +64,8 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
     }
 
     private void openMore(String[] row,String next){
-        MoreDialogue moreDialogue = new MoreDialogue(row,next);
-        moreDialogue.show(getSupportFragmentManager(), "More Dialogue");
+        MoreDialogueSubscription moreDialogueSubscription = new MoreDialogueSubscription(row,next);
+        moreDialogueSubscription.show(getSupportFragmentManager(), "More Dialogue");
     }
 
     private String calcNextDate(String dateOfReg,String frequency, String type){
@@ -116,7 +117,7 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
 
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            ArrayList<String> ourAllowances = new ArrayList<>();
+            ArrayList<String> ourSubscriptions = new ArrayList<>();
             int i = 0;
             String line;
 
@@ -125,14 +126,15 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
                 if(line.split("-")[3].equals("NONE")){
                     continue;
                 }
+
                 line = i+"-"+line;
-                ourAllowances.add(line);
+                ourSubscriptions.add(line);
                 i++;
             }
 
             bufferedReader.close();
 
-            return ourAllowances;
+            return ourSubscriptions;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -143,15 +145,14 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
     }
 
     private void updateTable(){
-        this.ourAllowances = readFile();
-
-        if(this.ourAllowances != null)
-            for(int i = 0 ; i < this.ourAllowances.size() ; i++){
+        this.ourSubscriptions = readFile();
+        if(this.ourSubscriptions != null)
+            for(int i = 0 ; i < this.ourSubscriptions.size() ; i++){
 
                 TableRow row = new TableRow(this);
                 row.setLayoutParams(findViewById(R.id.firstRow).getLayoutParams());
 
-                String[] thisRow = this.ourAllowances.get(i).split("-");
+                String[] thisRow = this.ourSubscriptions.get(i).split("-");
 
 
                 //Add amount
@@ -253,8 +254,8 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
 
     @Override
     public void removeAllowance(String id) {
-        updateAllowances(this.ourAllowances.get(Integer.parseInt(id)));
-        this.ourAllowances.remove(Integer.parseInt(id));
+        updateAllowances(this.ourSubscriptions.get(Integer.parseInt(id)));
+        this.ourSubscriptions.remove(Integer.parseInt(id));
         this.mTableLayout.removeView(rows.get(Integer.parseInt(id)));
         this.rows.remove(Integer.parseInt(id));
 

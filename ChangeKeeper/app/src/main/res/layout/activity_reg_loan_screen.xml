@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegExpenseScreen">
+
+    <TextView
+        android:id="@+id/typeText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Borrow"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeText">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/editAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:hint="@string/editMoney"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteY="90dp" />
+
+            <TextView
+                android:id="@+id/ammountText"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Ammount"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:typeface="monospace"
+                tools:layout_editor_absoluteX="242dp"
+                tools:layout_editor_absoluteY="144dp" />
+
+            <Spinner
+                android:id="@+id/destination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select Expense Category"
+                android:spinnerMode="dropdown"
+                tools:layout_editor_absoluteX="64dp"
+                tools:layout_editor_absoluteY="210dp" />
+
+            <TextView
+                android:id="@+id/ammountText7"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Destination"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:typeface="monospace"
+                tools:layout_editor_absoluteX="224dp"
+                tools:layout_editor_absoluteY="234dp" />
+
+            <EditText
+                android:id="@+id/fromInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:hint="Input a name"
+                android:inputType="textShortMessage"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="64dp"
+                tools:layout_editor_absoluteY="301dp" />
+
+            <TextView
+                android:id="@+id/ammountText3"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:fontFamily="@font/montserrat"
+                android:text="From"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:typeface="monospace"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="355dp" />
+
+            <TextView
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat"
+                android:hint="Select a date..."
+                android:textAlignment="center"
+                android:textSize="24sp"
+                tools:layout_editor_absoluteX="32dp"
+                tools:layout_editor_absoluteY="421dp" />
+
+            <TextView
+                android:id="@+id/ammountText4"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Payday"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:typeface="monospace"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="455dp" />
+
+            <EditText
+                android:id="@+id/descriptionInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:hint="Write a description"
+                android:inputType="textLongMessage"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="64dp"
+                tools:layout_editor_absoluteY="521dp" />
+
+            <TextView
+                android:id="@+id/ammountText5"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Description"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:typeface="monospace"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="576dp" />
+
+            <Button
+                android:id="@+id/confirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:onClick="errorCheck"
+                android:text="@string/confirmButton"
+                tools:layout_editor_absoluteX="64dp"
+                tools:layout_editor_absoluteY="648dp" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</android.support.constraint.ConstraintLayout>

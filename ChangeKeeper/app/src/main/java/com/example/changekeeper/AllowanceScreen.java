@@ -1,12 +1,10 @@
 package com.example.changekeeper;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -19,12 +17,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
-public class AllowanceScreen extends AppCompatActivity implements MoreDialogue.MoreDialogueListener {
+public class AllowanceScreen extends AppCompatActivity implements MoreDialogueAllowance.MoreDialogueListener {
     private static final String TAG = "AllowanceScreen";
     private ArrayList<String> ourAllowances;
     private TableLayout mTableLayout;
@@ -54,6 +50,7 @@ public class AllowanceScreen extends AppCompatActivity implements MoreDialogue.M
                     startActivity(new Intent(this, MainActivity.class));
                     return true;
                 case R.id.navigation_loans:
+                    startActivity(new Intent(this, LoanScreen.class));
                     return true;
                 case R.id.navigation_info:
                     return true;
@@ -67,8 +64,8 @@ public class AllowanceScreen extends AppCompatActivity implements MoreDialogue.M
     }
 
     private void openMore(String[] row,String next){
-        MoreDialogue moreDialogue = new MoreDialogue(row,next);
-        moreDialogue.show(getSupportFragmentManager(), "More Dialogue");
+        MoreDialogueAllowance moreDialogueAllowance = new MoreDialogueAllowance(row,next);
+        moreDialogueAllowance.show(getSupportFragmentManager(), "More Dialogue");
     }
 
     private String calcNextDate(String dateOfReg,String frequency, String type){

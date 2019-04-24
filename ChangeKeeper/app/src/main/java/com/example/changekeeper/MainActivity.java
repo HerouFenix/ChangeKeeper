@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
                 case R.id.navigation_home:
                     return true;
                 case R.id.navigation_loans:
+                    startActivity(new Intent(this, LoanScreen.class));
                     return true;
                 case R.id.navigation_info:
                     return true;

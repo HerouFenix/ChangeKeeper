@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RegExpenseScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CategoryDialogue.CategoryDialogListener, FrequencyDialogue.FrequencyDialogueListener {
+public class RegExpenseScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CategoryDialogue.CategoryDialogListener,ConfirmDialogue.ConfirmDialogListener, FrequencyDialogue.FrequencyDialogueListener {
 
     private static final String TAG = "RegExpense";
     private TextView mDisplayDate;
@@ -311,11 +311,11 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
                         this.frequencyType = "Day";
                         break;
                     case ("Every month"):
-                        this.frequency = "30";
+                        this.frequency = "1";
                         this.frequencyType = "Month";
                         break;
                     case ("Every week"):
-                        this.frequency = "7";
+                        this.frequency = "1";
                         this.frequencyType = "Week";
                         break;
 
@@ -336,8 +336,50 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
     }
 
 
+    public void errorCheck(View view){
+        boolean valid = true;
+        //Check amount
 
-    public void registerExpense(View view){
+        if (((TextView)findViewById(R.id.editAmount)).getText().length() == 0){
+            valid = false;
+        }
+
+        //Check date
+        if (((TextView)findViewById(R.id.datePicker)).getText().length() == 0){
+            valid = false;
+        }
+
+
+        if (valid == false){
+            /*TO DO: ADD MESSAGE TELLING THE USER TO FILL ALL FIELDS*/
+        }else{
+            callConfirm();
+        }
+
+    }
+
+    private void callConfirm(){
+        Bundle args = new Bundle();
+        args.putString("amount",((TextView)findViewById(R.id.editAmount)).getText().toString());
+        args.putString("regDate",((TextView)findViewById(R.id.datePicker)).getText().toString());
+        args.putString("type","EXPENSE");
+
+        if(this.typeFlag==0){
+            args.putString("dest","WALLET");
+        }else{
+            args.putString("dest","CARD");
+        }
+        ConfirmDialogue confirmDialogue = new ConfirmDialogue();
+        confirmDialogue.setArguments(args);
+        confirmDialogue.show(getSupportFragmentManager(), "Confirm Dialogue");
+    }
+
+    @Override
+    public void confirm() {
+        registerExpense();
+    }
+
+    private void registerExpense(){
         Intent intent = new Intent(this, MainActivity.class);
         EditText editText = (EditText) findViewById(R.id.editAmount);
         this.amount = Double.parseDouble(editText.getText().toString());
@@ -378,7 +420,6 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             //Register Template: WALLET/CARD - Amount - Category - Date - Frequency
             String type;
 
-            // String frequency = ""; /*TO DO*/
 
             if(this.typeFlag==0){
                 type = "WALLET";
@@ -399,7 +440,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             register.append("-");
             register.append(this.frequency);
             register.append("-");
-            register.append(this.weekdays);
+            register.append(this.weekdays+"\n");
 
             fileOutputStream.write(register.toString().getBytes());
             fileOutputStream.close();
@@ -438,5 +479,6 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             e.printStackTrace();
         }
     }
+
 
 }

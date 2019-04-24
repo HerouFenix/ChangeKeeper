@@ -35,26 +35,31 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RegIncomeScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, FrequencyDialogue.FrequencyDialogueListener, ConfirmDialogue.ConfirmDialogListener {
+public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, ConfirmDialogue.ConfirmDialogListener{
 
-    private static final String TAG = "RegIncome";
+    private static final String TAG = "RegLoan";
     private TextView mDisplayDate;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private int typeFlag;
-    private ArrayAdapter<String> frequencyAdapter;
+    private ArrayAdapter<String> destinationAdapter;
+
 
     //To save:
     //Amount
     private double amount;
 
-    //Date
+    //Destination (card or wallet);
+    private String destination;
 
+    //From
+    private String person;
+
+    //Date
     private String date;
 
-    //Frequency
-    private String frequency;
-    private ArrayList<String> weekdays;
-    private String frequencyType;
+    //Description
+    private String description;
+
 
 
     @Override
@@ -66,22 +71,27 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
 
         ActionBar toolbar = getSupportActionBar();
 
-        setContentView(R.layout.activity_reg_income_screen);
+        setContentView(R.layout.activity_reg_loan_screen);
+
 
         switch(message){
-            case "INCOME-WALLET":
+            case "BORROW":
                 this.typeFlag = 0;
-                toolbar.setTitle("Register Income - Wallet");
+                ((TextView)findViewById(R.id.typeText)).setText("Borrow");
+
                 break;
 
-            case "INCOME-CARD":
+            case "LEND":
                 this.typeFlag = 1;
-                toolbar.setTitle("Register Income - Card");
+                ((TextView)findViewById(R.id.typeText)).setText("Lend");
+
                 break;
 
             default:
                 Log.v(TAG,"wtf erro :D");
         }
+
+        Log.v(TAG,"OLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
         //Date
         mDisplayDate = (TextView) findViewById(R.id.datePicker);
@@ -94,7 +104,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog = new DatePickerDialog(
-                        RegIncomeScreen.this,
+                        RegLoanScreen.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         mDateSetListener,
                         year,month,day);
@@ -112,93 +122,27 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             }
         };
 
-        //Frequency Dropdown
-        buildFrequencySpinner();
+
+        //Destination Dropwdown
+        buildDestinationSpinner();
+
     }
 
-
-    private void buildFrequencySpinner(){
-        String[] items;
-        try {
-            FileInputStream fileInputStream = openFileInput("UserFrequencies.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            ArrayList<String> tempList = new ArrayList<>();
-            String line = "";
-            while((line = bufferedReader.readLine()) != null && line != "\n"){
-                tempList.add(line);
-            }
-
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-
-            items = new String[getResources().getStringArray(R.array.frequencies).length + tempList.size()];
-
-            for(int i = 0; i < getResources().getStringArray(R.array.frequencies).length-1; i++){
-                items[i] = getResources().getStringArray(R.array.frequencies)[i];
-            }
-
-            int j = 0;
-            for(int i = getResources().getStringArray(R.array.frequencies).length-1; i < items.length-1; i++){
-                items[i] = tempList.get(j);
-                j++;
-            }
-
-            items[items.length-1] = getResources().getStringArray(R.array.frequencies)[getResources().getStringArray(R.array.frequencies).length-1];
-
-        }catch (Exception e){
-            items = getResources().getStringArray(R.array.frequencies);
-
-        }
-        Spinner spinner = findViewById(R.id.frequencyPicker);
+    private void buildDestinationSpinner(){
+        String[] items = {"WALLET","CARD"};
+        Spinner spinner = findViewById(R.id.destination);
         spinner.setOnItemSelectedListener(this);
 
-        this.frequencyAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-
-        spinner.setAdapter(this.frequencyAdapter);
+        this.destinationAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(this.destinationAdapter);
     }
 
-    @Override
-    public void updateFrequencies(String frequency, String type, ArrayList<String> weekdays) {
-        this.frequency = frequency;
-        this.weekdays = weekdays;
-        this.frequencyType = type;
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        if (parent.getItemAtPosition(pos).toString().equals("Custom...") && parent.getId() == R.id.frequencyPicker){
-            FrequencyDialogue frequencyDialogue = new FrequencyDialogue();
-            frequencyDialogue.show(getSupportFragmentManager(), "Frequency Dialogue");
-        }
+         this.destination = parent.getSelectedItem().toString();
 
-        else if(parent.getId() == R.id.frequencyPicker){
-            switch(parent.getSelectedItem().toString()){
-                case ("Every day"):
-                    this.frequency = "1";
-                    this.frequencyType = "Day";
-                    break;
-                case ("Every month"):
-                    this.frequency = "1";
-                    this.frequencyType = "Month";
-                    break;
-                case ("Every week"):
-                    this.frequency = "1";
-                    this.frequencyType = "Week";
-                    break;
 
-                case ("Does not repeat"):
-                    this.frequency = "0";
-                    this.frequencyType = "NONE";
-                    break;
-
-            }
-            this.weekdays = new ArrayList<>();
-        }
 
     }
 
@@ -206,6 +150,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
 
     public void errorCheck(View view){
         boolean valid = true;
@@ -215,9 +160,18 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             valid = false;
         }
 
+        //Check person
+        if (((TextView)findViewById(R.id.fromInput)).getText().length() == 0){
+            valid = false;
+        }
+
         //Check date
         if (((TextView)findViewById(R.id.datePicker)).getText().length() == 0){
             valid = false;
+        }
+
+        if (((TextView)findViewById(R.id.descriptionInput)).getText().length() == 0){
+            this.description = "";
         }
 
 
@@ -232,14 +186,31 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
     private void callConfirm(){
         Bundle args = new Bundle();
         args.putString("amount",((TextView)findViewById(R.id.editAmount)).getText().toString());
-        args.putString("regDate",((TextView)findViewById(R.id.datePicker)).getText().toString());
-        args.putString("type","INCOME");
+        switch(this.typeFlag){
+            case 0:
+                args.putString("type","INCOME");
+                break;
 
-        if(this.typeFlag==0){
-            args.putString("dest","WALLET");
-        }else{
-            args.putString("dest","CARD");
+            case 1:
+                args.putString("type","EXPENSE");
+                break;
+
+            default:
+                Log.v(TAG,"wtf erro :D");
         }
+        switch(this.destination){
+            case "WALLET":
+                args.putString("dest","WALLET");
+                break;
+
+            case "CARD":
+                args.putString("dest","CARD");
+                break;
+
+            default:
+                Log.v(TAG,"wtf erro :D");
+        }
+
         ConfirmDialogue confirmDialogue = new ConfirmDialogue();
         confirmDialogue.setArguments(args);
         confirmDialogue.show(getSupportFragmentManager(), "Confirm Dialogue");
@@ -247,15 +218,17 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void confirm() {
-        registerIncome();
+        registerLoan();
     }
 
-    private void registerIncome(){
-        Intent intent = new Intent(this, MainActivity.class);
+    private void registerLoan(){
+        Intent intent = new Intent(this, LoanScreen.class);
         EditText editText = (EditText) findViewById(R.id.editAmount);
+
         this.amount = Double.parseDouble(editText.getText().toString());
         this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
-
+        this.person = ((TextView)findViewById(R.id.fromInput)).getText().toString();
+        this.description = ((TextView)findViewById(R.id.descriptionInput)).getText().toString();
 
         //Register
         writeFile();
@@ -264,7 +237,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         if(cal.get(Calendar.DAY_OF_MONTH) == Integer.parseInt(this.date.split("/")[0]) && (cal.get(Calendar.MONTH)+1) == Integer.parseInt(this.date.split("/")[1]) && cal.get(Calendar.YEAR) == Integer.parseInt(this.date.split("/")[2]))
             updateWallet();
 
-        Toast toast = Toast.makeText(this,"Income Registered Successfully", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this,"Loan Registered Successfully", Toast.LENGTH_SHORT);
 
         toast.show();
         startActivity(intent);
@@ -272,9 +245,24 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
 
     private void writeFile(){
         boolean found = false;
+
+        String fileName = "";
+        switch(this.typeFlag){
+            case 0:
+               fileName = "UserBorrows";
+                break;
+
+            case 1:
+                fileName = "UserLends";
+                break;
+
+            default:
+                Log.v(TAG,"wtf erro :D");
+        }
+
         for(String i : fileList()){
             Log.v(TAG,i+" ------------------------");
-            if(i.equals("UserIncomes.txt")){
+            if(i.equals(fileName+".txt")){
                 found = true;
                 break;
             }
@@ -283,33 +271,23 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         try{
             FileOutputStream fileOutputStream;
             if(!found) {
-                fileOutputStream = openFileOutput("UserIncomes.txt", MODE_PRIVATE);
+                fileOutputStream = openFileOutput(fileName+".txt", MODE_PRIVATE);
             }else{
-                fileOutputStream = openFileOutput("UserIncomes.txt", MODE_APPEND);
+                fileOutputStream = openFileOutput(fileName+".txt", MODE_APPEND);
             }
 
-            //Register Template: WALLET/CARD - Amount - Date - FrequencyType - Frequency - Weekdays
-            String type;
+            //Register Template: WALLET/CARD - Amount - Person - Date - Description
 
-            // String frequency = ""; /*TO DO*/
-
-            if(this.typeFlag==0){
-                type = "WALLET";
-            }else{
-                type = "CARD";
-            }
             StringBuilder register = new StringBuilder();
-            register.append(type);
+            register.append(this.destination);
             register.append("-");
-            register.append(amount+"");
+            register.append(this.amount);
+            register.append("-");
+            register.append(this.person);
             register.append("-");
             register.append(this.date);
             register.append("-");
-            register.append(this.frequencyType);
-            register.append("-");
-            register.append(this.frequency);
-            register.append("-");
-            register.append(this.weekdays+"\n");
+            register.append(this.description+"\n");
 
             fileOutputStream.write(register.toString().getBytes());
             fileOutputStream.close();
@@ -329,9 +307,15 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             Double cardAmount = Double.parseDouble(bufferedReader.readLine());
 
             if(this.typeFlag == 0){
-                walletAmount = walletAmount + this.amount;
+                if(this.destination == "WALLET")
+                    walletAmount = walletAmount + this.amount;
+                else
+                    cardAmount = cardAmount + this.amount;
             }else{
-                cardAmount = cardAmount + this.amount;
+                if(this.destination == "WALLET")
+                    walletAmount = walletAmount - this.amount;
+                else
+                    cardAmount = cardAmount - this.amount;
             }
 
 
@@ -349,4 +333,6 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         }
     }
 
+
 }
+
