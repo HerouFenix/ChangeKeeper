@@ -5,12 +5,12 @@
 
     <item
         android:id="@+id/navigation_subscriptions"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_subscription"
         android:title="@string/title_subscriptions" />
 
     <item
         android:id="@+id/navigation_allowances"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_allowance"
         android:title="@string/title_allowance" />
 
     <item
@@ -20,11 +20,11 @@
 
     <item
         android:id="@+id/navigation_loans"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_loan"
         android:title="@string/title_loans" />
 
     <item
         android:id="@+id/navigation_info"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_graph"
         android:title="@string/title_info" />
 </menu>

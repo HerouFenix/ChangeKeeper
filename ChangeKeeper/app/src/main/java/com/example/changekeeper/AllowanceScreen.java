@@ -30,8 +30,10 @@ public class AllowanceScreen extends AppCompatActivity implements MoreDialogueAl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar toolbar = getSupportActionBar();
-        toolbar.setTitle("My Allowances");
-        toolbar.setTitle("My Allowances");
+        toolbar = getSupportActionBar();
+        toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        toolbar.setCustomView(R.layout.layout_actionbar);
+        ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("My Allowances");
 
         Intent intent = getIntent();
 

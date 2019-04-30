@@ -37,8 +37,11 @@ public class LoanScreen extends AppCompatActivity implements MoreDialogueLoans.M
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar toolbar = getSupportActionBar();
-        toolbar.setTitle("Loans");
+        ActionBar toolbar;
+        toolbar = getSupportActionBar();
+        toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        toolbar.setCustomView(R.layout.layout_actionbar);
+        ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("Loans");
 
         Intent intent = getIntent();
 

@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
         setContentView(R.layout.activity_main);
 
         toolbar = getSupportActionBar();
-        toolbar.setTitle("ChangeKeeper");
+        toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        toolbar.setCustomView(R.layout.layout_actionbar);
+        ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("ChangeKeeper");
 
         this.mPager = (ViewPager) findViewById(R.id.typeSelector);
         this.pageAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());

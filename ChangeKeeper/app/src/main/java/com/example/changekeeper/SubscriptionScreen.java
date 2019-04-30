@@ -30,9 +30,11 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar toolbar = getSupportActionBar();
-        toolbar.setTitle("My Subscriptions");
-
+        ActionBar toolbar;
+        toolbar = getSupportActionBar();
+        toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        toolbar.setCustomView(R.layout.layout_actionbar);
+        ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("My Subscriptions");
         Intent intent = getIntent();
 
         setContentView(R.layout.activity_subscriptions);

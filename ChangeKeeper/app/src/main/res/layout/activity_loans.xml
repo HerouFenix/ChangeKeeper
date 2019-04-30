@@ -164,29 +164,29 @@
 
     <ImageButton
         android:id="@+id/borrowButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_borrow"
         android:onClick="goToBorrow"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lendTable"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:layout_constraintTop_toBottomOf="@+id/lendTable" />
 
     <ImageButton
         android:id="@+id/borrowButton2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="45dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_lend"
         android:onClick="goToLend"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lendTable"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:layout_constraintTop_toBottomOf="@+id/lendTable" />
 
     <TextView
         android:id="@+id/allowanceText3"
