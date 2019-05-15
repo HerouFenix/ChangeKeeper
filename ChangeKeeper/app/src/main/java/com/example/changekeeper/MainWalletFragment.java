@@ -23,7 +23,7 @@ public class MainWalletFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         thisView = (ViewGroup) inflater.inflate(
-                R.layout.layout_main_wallet, container, false);
+                R.layout.fragment_main_wallet, container, false);
 
         //In case the file doesn't exist yet
         boolean found = false;

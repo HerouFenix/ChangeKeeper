@@ -21,6 +21,15 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
+            android:name=".GraphsScreen"
+            android:parentActivityName=".MainActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".RegIncomeScreen"
             android:parentActivityName=".MainActivity">
 
@@ -48,8 +57,26 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".SubscriptionScreen"
-            android:parentActivityName=".MainActivity">
+            android:name=".AllowanceMoreInfoScreen"
+            android:parentActivityName=".AllowanceScreen">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".GraphsAllowanceMoreInfoScreen"
+            android:parentActivityName=".GraphsScreen">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".GraphsLoanMoreInfoScreen"
+            android:parentActivityName=".GraphsScreen">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
@@ -58,6 +85,42 @@
         </activity>
         <activity
             android:name=".LoanScreen"
+            android:parentActivityName=".MainActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".LoansLoanMoreInfoScreen"
+            android:parentActivityName=".LoanScreen">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".GraphsSubscriptionMoreInfoScreen"
+            android:parentActivityName=".GraphsScreen">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".GraphsScreen" />
+        </activity>
+        <activity
+            android:name=".SubscriptionMoreInfoScreen"
+            android:parentActivityName=".SubscriptionScreen">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SubscriptionScreen" />
+        </activity>
+        <activity
+            android:name=".SubscriptionScreen"
             android:parentActivityName=".MainActivity">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->

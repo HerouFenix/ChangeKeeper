@@ -321,7 +321,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
                     case ("Does not repeat"):
                         this.frequency = "0";
-                        this.frequencyType = "NONE";
+                        this.frequencyType = "NULL";
                         break;
 
                 }
@@ -334,7 +334,6 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
 
     public void errorCheck(View view){
         boolean valid = true;
@@ -416,8 +415,6 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
                 fileOutputStream = openFileOutput("UserExpenses.txt", MODE_APPEND);
             }
 
-
-            //Register Template: WALLET/CARD - Amount - Category - Date - Frequency
             String type;
 
 
@@ -427,20 +424,31 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
                 type = "CARD";
             }
 
+            //Format: WALLET/CARD - Amount - Register Date - Person (LOANS) - Category(EXPENSES) - FrequencyType - Frequency - Weekdays - Description - PayDate(LOANS) - PAID/NOT PAID (LOANS)
+
             StringBuilder register = new StringBuilder();
             register.append(type);
-            register.append("-");
-            register.append(amount+"");
-            register.append("-");
-            register.append(this.category);
-            register.append("-");
+            register.append(" - ");
+            register.append("-"+amount+""); //Make amount negative
+            register.append(" - ");
             register.append(this.date);
-            register.append("-");
+            register.append(" - ");
+            register.append("NULL");
+            register.append(" - ");
+            register.append(this.category);
+            register.append(" - ");
             register.append(this.frequencyType);
-            register.append("-");
+            register.append(" - ");
             register.append(this.frequency);
-            register.append("-");
-            register.append(this.weekdays+"\n");
+            register.append(" - ");
+            register.append(this.weekdays);
+            register.append(" - ");
+            register.append(" Do Description ");
+            register.append(" - ");
+            register.append("NULL");
+            register.append(" - ");
+            register.append("NULL"+"\n");
+
 
             fileOutputStream.write(register.toString().getBytes());
             fileOutputStream.close();

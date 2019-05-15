@@ -1,207 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".LoanScreen">
 
-    <TableLayout
-        android:id="@+id/lendTable"
-        android:layout_width="0dp"
-        android:layout_height="164dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allowanceText3">
-
-        <TableRow
-            android:id="@+id/firstRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/amountView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Amount"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/destView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Destination"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/personView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Person"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/payByView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Pay By"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/moreView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="More"
-                android:textStyle="bold" />
-
-        </TableRow>
-    </TableLayout>
-
-    <TableLayout
-        android:id="@+id/borrowTable"
-        android:layout_width="0dp"
-        android:layout_height="164dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allowanceText2">
-
-        <TableRow
-            android:id="@+id/firstRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/amountView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Amount"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/destView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Destination"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/personView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Person"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/payByView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="Pay By"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/moreView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/montserrat"
-                android:padding="9dp"
-                android:text="More"
-                android:textStyle="bold" />
-
-        </TableRow>
-    </TableLayout>
-
-    <TextView
-        android:id="@+id/expenseText2"
-        android:layout_width="72dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="44dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Borrow"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/borrowButton" />
-
-    <TextView
-        android:id="@+id/expenseText3"
-        android:layout_width="72dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="44dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Lend"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/borrowButton2" />
-
-    <ImageButton
-        android:id="@+id/borrowButton"
-        android:layout_width="74dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/ic_borrow"
-        android:onClick="goToBorrow"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lendTable" />
-
-    <ImageButton
-        android:id="@+id/borrowButton2"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/ic_lend"
-        android:onClick="goToLend"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lendTable" />
-
-    <TextView
-        android:id="@+id/allowanceText3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/montserrat"
-        android:text="My Lents"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/borrowTable" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -214,17 +18,65 @@
         app:menu="@menu/navigation" />
 
     <TextView
-        android:id="@+id/allowanceText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:id="@+id/expenseText"
+        android:layout_width="72dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="64dp"
         android:fontFamily="@font/montserrat"
-        android:text="My Borrows"
+        android:text="Borrow"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:typeface="monospace"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/graphsButton" />
+
+    <TextView
+        android:id="@+id/incomeText"
+        android:layout_width="72dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="64dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Lend"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoButton" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/typeSelector"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/graphsButton"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/colorAccent"
+        android:src="@drawable/ic_borrow"
+        android:onClick="goToBorrow"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/infoButton"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/colorAccent"
+        android:onClick="goToLend"
+
+        android:src="@drawable/ic_lend"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

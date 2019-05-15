@@ -23,13 +23,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity implements TransferDialogue.TransferListener {
-    /* TO DO:
-        1.Implement bottom navbar
-        2.Implement Carroussel ( HOW THE HECK!?)
-        3.Implement TransferToX
-        4.Implement RegisterIncome
-        5.Change TopBar
-     */
 
     public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "MainAct";
@@ -63,9 +56,15 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
                 if (position == 0 ){
                     TextView view = (TextView) findViewById(R.id.transferText);
                     view.setText("Transfer to Card");
+                    findViewById(R.id.transferToCardButton).setScaleX(1);
+                    findViewById(R.id.transferToCardButton).animate().rotation(180).start();
+
                 }else{
                     TextView view = (TextView) findViewById(R.id.transferText);
                     view.setText("Transfer to Wallet");
+                    findViewById(R.id.transferToCardButton).setScaleX(-1);
+                    findViewById(R.id.transferToCardButton).animate().rotation(-180).start();
+
                 }
             }
         });
@@ -86,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
                     startActivity(new Intent(this, LoanScreen.class));
                     return true;
                 case R.id.navigation_info:
+                    startActivity(new Intent(this, GraphsScreen.class));
                     return true;
             }
             return false;

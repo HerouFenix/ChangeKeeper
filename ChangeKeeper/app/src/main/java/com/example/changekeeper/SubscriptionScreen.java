@@ -3,11 +3,13 @@ package com.example.changekeeper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,20 +23,19 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class SubscriptionScreen extends AppCompatActivity implements MoreDialogueSubscription.MoreDialogueListener {
-    private static final String TAG = "Subscriptions Screen";
-    private ArrayList<String> ourSubscriptions;
-    private TableLayout mTableLayout;
-    private ArrayList<TableRow> rows = new ArrayList<>();
+public class SubscriptionScreen extends AppCompatActivity {
+    private static final String TAG = "SubscriptionScreen";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar toolbar;
+        ActionBar toolbar = getSupportActionBar();
         toolbar = getSupportActionBar();
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         toolbar.setCustomView(R.layout.layout_actionbar);
         ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("My Subscriptions");
+
         Intent intent = getIntent();
 
         setContentView(R.layout.activity_subscriptions);
@@ -46,7 +47,7 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
                 case R.id.navigation_subscriptions:
                     return true;
                 case R.id.navigation_allowances:
-                    startActivity( new Intent(this, AllowanceScreen.class));
+                    startActivity(new Intent(this, AllowanceScreen.class));
                     return true;
                 case R.id.navigation_home:
                     startActivity(new Intent(this, MainActivity.class));
@@ -55,88 +56,52 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
                     startActivity(new Intent(this, LoanScreen.class));
                     return true;
                 case R.id.navigation_info:
+                    startActivity(new Intent(this, GraphsScreen.class));
                     return true;
             }
             return false;
         });
 
-        this.mTableLayout = findViewById(R.id.allowanceTable);
-        updateTable();
-
-    }
-
-    private void openMore(String[] row,String next){
-        MoreDialogueSubscription moreDialogueSubscription = new MoreDialogueSubscription(row,next);
-        moreDialogueSubscription.show(getSupportFragmentManager(), "More Dialogue");
-    }
-
-    private String calcNextDate(String dateOfReg,String frequency, String type){
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(dateOfReg.split("/")[0]));
-        cal.set(Calendar.MONTH,Integer.parseInt(dateOfReg.split("/")[1])-1);
-        cal.set(Calendar.YEAR,Integer.parseInt(dateOfReg.split("/")[2]));
-
-        Calendar current = Calendar.getInstance();
-
-
-        switch(type){
-            case "Day":
-                do {
-                    cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(frequency));
-                }while(current.after(cal));
-                break;
-            case "Week":
-                do {
-                    cal.add(Calendar.WEEK_OF_MONTH, Integer.parseInt(frequency));
-                }while(current.after(cal));
-                break;
-            case "Month":
-                do {
-                    cal.add(Calendar.MONTH, Integer.parseInt(frequency));
-                }while(current.after(cal));
-                break;
-            case "Year":
-                do {
-                    cal.add(Calendar.YEAR, Integer.parseInt(frequency));
-                }while(current.after(cal));
-                break;
+        ArrayList<String> temp = loadExpenses();
+        if(temp!=null && temp.size()!=0){
+            LinearLayout ll;
+            ll = (LinearLayout) findViewById(R.id.noInfoLayout);
+            ll.removeAllViewsInLayout();
         }
-
-        //Add support for weekdays
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
-        String date = day+"/"+month+"/"+year;
-
-        return date;
     }
 
-    private ArrayList<String> readFile() {
+    private ArrayList<String> loadExpenses() {
         try {
             FileInputStream fileInputStream = openFileInput("UserExpenses.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
 
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            ArrayList<String> ourSubscriptions = new ArrayList<>();
-            int i = 0;
+            ArrayList<String> ourAllowances = new ArrayList<>();
             String line;
 
-            //Format: ID - WALLET/CARD - Amount - Category - Date - FrequencyType - Frequency - Weekdays
+            //Format: WALLET/CARD - Amount - Register Date - Person (LOANS) - Category(EXPENSES) - FrequencyType - Frequency - Weekdays - Description - PayDate(LOANS) - PAID/NOT PAID (LOANS)
             while((line = bufferedReader.readLine()) != null){
-                if(line.split("-")[3].equals("NONE")){
+                if(line.split(" - ")[5].equals("NONE")){
                     continue;
                 }
+                line =  line.split(" - ")[0] + " - " +
+                        line.split(" - ")[1] + " - " +
+                        line.split(" - ")[2] + " - " +
+                        line.split(" - ")[3] + " - " +
+                        line.split(" - ")[4] + " - " +
+                        line.split(" - ")[5] + " - " +
+                        line.split(" - ")[6] + " - " +
+                        line.split(" - ")[7] + " - " +
+                        line.split(" - ")[8] + " - " +
+                        line.split(" - ")[9] + " - " +
+                        line.split(" - ")[10];
 
-                line = i+"-"+line;
-                ourSubscriptions.add(line);
-                i++;
+                ourAllowances.add(line);
             }
-
             bufferedReader.close();
 
-            return ourSubscriptions;
+            return ourAllowances;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -146,120 +111,5 @@ public class SubscriptionScreen extends AppCompatActivity implements MoreDialogu
         return null;
     }
 
-    private void updateTable(){
-        this.ourSubscriptions = readFile();
-        if(this.ourSubscriptions != null)
-            for(int i = 0 ; i < this.ourSubscriptions.size() ; i++){
 
-                TableRow row = new TableRow(this);
-                row.setLayoutParams(findViewById(R.id.firstRow).getLayoutParams());
-
-                String[] thisRow = this.ourSubscriptions.get(i).split("-");
-
-
-                //Add amount
-                TextView currentText = new TextView(this);
-                currentText.setText(thisRow[2]);
-                currentText.setLayoutParams(findViewById(R.id.amountView).getLayoutParams());
-                row.addView(currentText);
-
-                //Add Destination
-                currentText = new TextView(this);
-                currentText.setText(thisRow[1]);
-                currentText.setLayoutParams(findViewById(R.id.destView).getLayoutParams());
-                row.addView(currentText);
-
-                //Add Next Date
-                currentText = new TextView(this);
-                String next = calcNextDate(thisRow[4],thisRow[6],thisRow[5]);
-                currentText.setText(next);
-                currentText.setLayoutParams(findViewById(R.id.nextView).getLayoutParams());
-                row.addView(currentText);
-
-
-                //Add Frequency
-                currentText = new TextView(this);
-                currentText.setText(thisRow[6] + " " + thisRow[5]);
-                currentText.setLayoutParams(findViewById(R.id.freqView).getLayoutParams());
-                row.addView(currentText);
-
-                //Add More button
-                ImageButton imButton = new ImageButton(this);
-                imButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openMore(thisRow,next);
-                    };
-                });
-                row.addView(imButton);
-
-                this.rows.add(row);
-
-                this.mTableLayout.addView(row);
-            }
-    }
-
-    private void updateAllowances(String toRemove){
-        ArrayList<String> temp = new ArrayList<>();
-        ArrayList<String> temp2 = new ArrayList<>();
-
-        try {
-            FileInputStream fileInputStream = openFileInput("UserExpenses.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            int i = 0;
-            int j = 0;
-            String line;
-
-            //Format: ID - WALLET/CARD - Amount - Date - FrequencyType - Frequency - Weekdays
-            while((line = bufferedReader.readLine()) != null){
-                if(line.split("-")[3].equals("NONE")){
-                    line = j + "-" + line;
-                    temp.add(line);
-                }else {
-                    line = i + "-" + line;
-                    temp.add(line);
-                    i++;
-                }
-            }
-
-            bufferedReader.close();
-            temp.remove(toRemove);
-
-            for(int m = 0 ; m < temp.size() ; m++){
-                String[] toAdd = temp.get(m).split("-");
-                String newLine = toAdd[1];
-                for(int k = 2 ; k < toAdd.length ; k++){
-                    newLine = newLine+"-"+toAdd[k];
-                }
-                temp2.add(newLine);
-            }
-
-            FileOutputStream fileOutputStream = openFileOutput("UserExpenses.txt", MODE_PRIVATE);
-
-            for(int k = 0 ; k < temp2.size() ; k++){
-                fileOutputStream.write((temp2.get(k)+"\n").getBytes());
-            }
-
-            fileOutputStream.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void removeAllowance(String id) {
-        updateAllowances(this.ourSubscriptions.get(Integer.parseInt(id)));
-        this.ourSubscriptions.remove(Integer.parseInt(id));
-        this.mTableLayout.removeView(rows.get(Integer.parseInt(id)));
-        this.rows.remove(Integer.parseInt(id));
-
-    }
 }

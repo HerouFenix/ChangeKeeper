@@ -29,7 +29,7 @@
         android:textStyle="bold"
         android:typeface="monospace"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expenseButton" />
+        app:layout_constraintTop_toBottomOf="@+id/graphsButton" />
 
     <TextView
         android:id="@+id/incomeText"
@@ -43,7 +43,7 @@
         android:textStyle="bold"
         android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/incomeButton" />
+        app:layout_constraintTop_toBottomOf="@+id/infoButton" />
 
     <TextView
         android:id="@+id/transferText"
@@ -61,14 +61,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transferToCardButton" />
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/typeSelector"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/graphsButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
-        android:id="@+id/expenseButton"
+        android:id="@+id/graphsButton"
         android:layout_width="74dp"
         android:layout_height="74dp"
         android:layout_marginStart="28dp"
         android:layout_marginBottom="100dp"
-        android:background="@drawable/ic_expense"
+        android:backgroundTint="@color/colorAccent"
         android:onClick="goToExpense"
+        android:src="@drawable/ic_expense"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -77,32 +88,24 @@
         android:layout_width="74dp"
         android:layout_height="74dp"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/ic_transfer"
+        android:backgroundTint="@color/colorAccent"
         android:onClick="openTransferDialogue"
+        android:src="@drawable/ic_transfer"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/incomeButton"
+        android:id="@+id/infoButton"
         android:layout_width="74dp"
         android:layout_height="74dp"
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="100dp"
-        android:background="@drawable/ic_income"
+        android:backgroundTint="@color/colorAccent"
         android:onClick="goToIncome"
+        android:src="@drawable/ic_income"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/typeSelector"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/transferToCardButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

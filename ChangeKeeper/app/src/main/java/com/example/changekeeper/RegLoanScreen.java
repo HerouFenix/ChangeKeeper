@@ -276,18 +276,37 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
                 fileOutputStream = openFileOutput(fileName+".txt", MODE_APPEND);
             }
 
-            //Register Template: WALLET/CARD - Amount - Person - Date - Description
+            //Format: WALLET/CARD - Amount - Register Date - Person (LOANS) - Category(EXPENSES) - FrequencyType - Frequency - Weekdays - Description - PayDate(LOANS) - PAID/NOT PAID (LOANS)
 
             StringBuilder register = new StringBuilder();
             register.append(this.destination);
-            register.append("-");
-            register.append(this.amount);
-            register.append("-");
+            register.append(" - ");
+            if(fileName.equals("UserBorrows"))
+                register.append(this.amount+"");
+            else
+                register.append("-"+this.amount+"");
+            register.append(" - ");
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            register.append(day+"/"+month+"/"+year);
+            register.append(" - ");
             register.append(this.person);
-            register.append("-");
+            register.append(" - ");
+            register.append("NULL");
+            register.append(" - ");
+            register.append("NULL");
+            register.append(" - ");
+            register.append("NULL");
+            register.append(" - ");
+            register.append("NULL");
+            register.append(" - ");
+            register.append(" Do Description ");
+            register.append(" - ");
             register.append(this.date);
-            register.append("-");
-            register.append(this.description+"\n");
+            register.append(" - ");
+            register.append("NOT PAID"+"\n");
 
             fileOutputStream.write(register.toString().getBytes());
             fileOutputStream.close();
@@ -307,12 +326,12 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
             Double cardAmount = Double.parseDouble(bufferedReader.readLine());
 
             if(this.typeFlag == 0){
-                if(this.destination == "WALLET")
+                if(this.destination.equals("WALLET"))
                     walletAmount = walletAmount + this.amount;
                 else
                     cardAmount = cardAmount + this.amount;
             }else{
-                if(this.destination == "WALLET")
+                if(this.destination.equals("WALLET"))
                     walletAmount = walletAmount - this.amount;
                 else
                     cardAmount = cardAmount - this.amount;

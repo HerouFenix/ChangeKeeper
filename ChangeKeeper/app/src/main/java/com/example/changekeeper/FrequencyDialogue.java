@@ -6,15 +6,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FrequencyDialogue extends AppCompatDialogFragment{
@@ -43,7 +40,7 @@ public class FrequencyDialogue extends AppCompatDialogFragment{
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String frequency = ((TextView)view.findViewById(R.id.frequency)).getText().toString();
+                        String frequency = ((TextView)view.findViewById(R.id.regText)).getText().toString();
                         String type = spinner.getSelectedItem().toString();
                         ArrayList<String> days = new ArrayList<>();
                         if(view.findViewById(R.id.mondayButton).isSelected())

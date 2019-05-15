@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@+id/freqPick" />
 
     <EditText
-        android:id="@+id/frequency"
+        android:id="@+id/regText"
         android:layout_width="50dp"
         android:layout_height="39dp"
         android:layout_marginStart="16dp"
@@ -47,7 +47,7 @@
         android:layout_height="35dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/frequency"
+        app:layout_constraintStart_toEndOf="@+id/regText"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <ToggleButton
