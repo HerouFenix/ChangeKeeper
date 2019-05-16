@@ -24,7 +24,7 @@
             android:typeface="monospace"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editAmount" />
+            app:layout_constraintTop_toBottomOf="@+id/regText" />
 
         <TextView
             android:id="@+id/expenseAmount"
@@ -36,11 +36,11 @@
             android:textAlignment="center"
             android:textSize="30sp"
             android:typeface="monospace"
-            app:layout_constraintBaseline_toBaselineOf="@+id/editAmount"
+            app:layout_constraintBaseline_toBaselineOf="@+id/regText"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
-            android:id="@+id/editAmount"
+            android:id="@+id/regText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"

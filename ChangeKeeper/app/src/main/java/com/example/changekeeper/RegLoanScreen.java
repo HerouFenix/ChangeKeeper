@@ -1,13 +1,9 @@
 package com.example.changekeeper;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,19 +17,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, ConfirmDialogue.ConfirmDialogListener{
 
@@ -94,7 +84,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         Log.v(TAG,"OLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
         //Date
-        mDisplayDate = (TextView) findViewById(R.id.datePicker);
+        mDisplayDate = (TextView) findViewById(R.id.regText);
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,7 +146,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         boolean valid = true;
         //Check amount
 
-        if (((TextView)findViewById(R.id.editAmount)).getText().length() == 0){
+        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
             valid = false;
         }
 
@@ -166,7 +156,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         }
 
         //Check date
-        if (((TextView)findViewById(R.id.datePicker)).getText().length() == 0){
+        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
             valid = false;
         }
 
@@ -185,7 +175,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
     private void callConfirm(){
         Bundle args = new Bundle();
-        args.putString("amount",((TextView)findViewById(R.id.editAmount)).getText().toString());
+        args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString());
         switch(this.typeFlag){
             case 0:
                 args.putString("type","INCOME");
@@ -223,10 +213,10 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
     private void registerLoan(){
         Intent intent = new Intent(this, LoanScreen.class);
-        EditText editText = (EditText) findViewById(R.id.editAmount);
+        EditText editText = (EditText) findViewById(R.id.regText);
 
         this.amount = Double.parseDouble(editText.getText().toString());
-        this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
+        this.date = ((TextView)findViewById(R.id.regText)).getText().toString();
         this.person = ((TextView)findViewById(R.id.fromInput)).getText().toString();
         this.description = ((TextView)findViewById(R.id.descriptionInput)).getText().toString();
 

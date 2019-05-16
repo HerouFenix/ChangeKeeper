@@ -1,176 +1,381 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".RegExpenseScreen">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/typeText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Register Expense"
-        android:textAlignment="center"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/ammountText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Amount"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:typeface="monospace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAmount" />
-
-    <TextView
-        android:id="@+id/ammountText3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Category"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:typeface="monospace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expenseCategory" />
-
-    <TextView
-        android:id="@+id/ammountText5"
-        android:layout_width="0dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Frequency"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:typeface="monospace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frequencyPicker" />
-
-    <TextView
-        android:id="@+id/ammountText4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Date"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:typeface="monospace"
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-    <TextView
-        android:id="@+id/expenseAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/montserrat"
-        android:text="€"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:typeface="monospace"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editAmount"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editAmount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:fontFamily="@font/montserrat"
-        android:hint="@string/editMoney"
-        android:inputType="numberDecimal"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/ammountText2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeText" />
+            <TextView
+                android:id="@+id/typeText4"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Register Income"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:typeface="monospace"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/confirmButton"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="errorCheck"
-        android:text="@string/confirmButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ammountText5" />
 
-    <Spinner
-        android:id="@+id/expenseCategory"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="64dp"
-        android:hint="Select Expense Category"
-        android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ammountText" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <Spinner
-        android:id="@+id/frequencyPicker"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="64dp"
-        android:hint="Select Expense Category"
-        android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ammountText4" />
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_euro" />
 
-    <TextView
-        android:id="@+id/datePicker"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:fontFamily="@font/montserrat"
-        android:hint="Select a date..."
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ammountText3" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/regText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#2ecc71"
+                        android:ems="10"
+                        android:fontFamily="@font/montserrat"
+                        android:hint="0.00€"
+                        android:inputType="numberDecimal"
+                        android:textAlignment="viewStart"
+                        android:textColor="#2c3e50"
+                        android:textSize="28dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Amount"
+                android:textAlignment="center"
+                android:textColor="#7f8c8d"
+                android:textSize="24sp" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/ic_calender" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="25dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/datePicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="#2ecc71"
+                            android:ems="10"
+
+                            android:fontFamily="@font/montserrat"
+                            android:hint="Select a date..."
+                            android:paddingTop="10dp"
+                            android:paddingBottom="20dp"
+                            android:textAlignment="viewStart"
+                            android:textColor="#2c3e50"
+                            android:textSize="28dp" />
+
+                        <View
+                            android:id="@+id/divider15"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_marginBottom="2dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:backgroundTint="#2ecc71" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/l"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Date of Registration"
+                android:textAlignment="center"
+                android:textColor="#7f8c8d"
+                android:textSize="24sp" />
+
+            <View
+                android:id="@+id/divider13"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_frequency" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="25dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/frequencyPicker"
+                        android:layout_width="match_parent"
+                        android:layout_height="73dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#2ecc71"
+                        android:ems="10"
+                        android:fontFamily="@font/montserrat"
+                        android:inputType="textPersonName"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="20dp"
+                        android:text="Does not repeat"
+                        android:textAlignment="viewStart"
+                        android:textColor="#2c3e50"
+                        android:textSize="30sp" />
+
+                    <View
+                        android:id="@+id/divider22"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimary"
+                        android:backgroundTint="#2ecc71" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/x"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Frequency"
+                android:textAlignment="center"
+                android:textColor="#7f8c8d"
+                android:textSize="24sp" />
+
+            <View
+                android:id="@+id/divider10"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/cat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/ic_usercat" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="25dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/categoryPicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="#2ecc71"
+                            android:ems="10"
+
+                            android:fontFamily="@font/montserrat"
+                            android:hint="Select a date..."
+                            android:paddingTop="10dp"
+                            android:paddingBottom="20dp"
+                            android:text="Non-Specified"
+                            android:textAlignment="viewStart"
+                            android:textColor="#2c3e50"
+                            android:textSize="28dp" />
+
+                        <View
+                            android:id="@+id/d"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_marginBottom="2dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:backgroundTint="#2ecc71" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/x4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Category"
+                android:textAlignment="center"
+                android:textColor="#7f8c8d"
+                android:textSize="24sp" />
+
+            <View
+                android:id="@+id/divider16"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:cropToPadding="false"
+                    app:srcCompat="@drawable/ic_description" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/editDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#2ecc71"
+                        android:ems="10"
+                        android:fontFamily="@font/montserrat"
+                        android:hint="Write a description..."
+                        android:inputType="text"
+                        android:selectAllOnFocus="false"
+                        android:textAlignment="viewStart"
+                        android:textColor="#2c3e50"
+                        android:textSize="28dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/registDate2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Description"
+                android:textAlignment="center"
+                android:textColor="#7f8c8d"
+                android:textSize="24sp" />
+
+            <View
+                android:id="@+id/divider12"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="?android:attr/listDivider" />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
+                android:onClick="errorCheck"
+                app:srcCompat="@drawable/ic_confirm" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </android.support.constraint.ConstraintLayout>

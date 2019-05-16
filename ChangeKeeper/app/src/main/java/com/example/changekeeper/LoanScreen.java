@@ -2,7 +2,10 @@ package com.example.changekeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -17,14 +20,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 public class LoanScreen extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "MainAct";
@@ -33,6 +28,7 @@ public class LoanScreen extends AppCompatActivity {
 
     private ViewPager mPager;
     private PagerAdapter pageAdapter;
+    public static int currentPage = 0;
     private static final int NUM_PAGES = 2;
 
 
@@ -50,6 +46,11 @@ public class LoanScreen extends AppCompatActivity {
         this.pageAdapter = new LoanScreen.ScreenSlidePagerAdapter(getSupportFragmentManager());
         this.mPager.setAdapter(pageAdapter);
 
+        TabLayout tabLayout = findViewById(R.id.tab);
+        tabLayout.setupWithViewPager(this.mPager);
+
+
+        this.mPager.setCurrentItem(this.currentPage);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.navigation_loans);
@@ -115,6 +116,7 @@ public class LoanScreen extends AppCompatActivity {
             this.lendFrag = new LoanScreenLendFragment();
         }
 
+
         @Override
         public Fragment getItem(int position) {
             if (position == 0)
@@ -128,6 +130,14 @@ public class LoanScreen extends AppCompatActivity {
             return NUM_PAGES;
         }
 
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if(position==0){
+                return "Debts";
+            }else{
+                return "Loans";
+            }
+        }
 
     }
 

@@ -2,13 +2,28 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/baseConstraint"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_rounded">
+
+    <ImageView
+        android:id="@+id/trans"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:alpha="0.8"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@+id/layout"
+        app:layout_constraintEnd_toEndOf="@+id/divider14"
+        app:layout_constraintStart_toStartOf="@+id/divider14"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_eurotransp" />
+
 
     <TextView
         android:id="@+id/typeText2"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
@@ -16,105 +31,163 @@
         android:fontFamily="@font/montserrat"
         android:text="Please Confirm"
         android:textAlignment="center"
-        android:textSize="36sp"
+        android:textColor="#34495e"
+        android:textSize="30dp"
         android:textStyle="bold"
-        android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/currentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Current money in X"
+        android:textAlignment="viewStart"
+        android:textColor="#7f8c8d"
+        android:textSize="20dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeText2" />
+    <TextView
+        android:id="@+id/current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/montserrat"
+        android:text="0.00€"
+        android:textAlignment="viewStart"
+        android:textSize="32dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentText" />
+
+    <TextView
+        android:id="@+id/ammountText9"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Amount registered:"
+        android:textAlignment="viewStart"
+        android:textColor="#7f8c8d"
+        android:textSize="20dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/current" />
+
+    <TextView
+        android:id="@+id/registered"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/montserrat"
+        android:text="0.00€"
+        android:textAlignment="viewStart"
+        android:textSize="32dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ammountText9" />
+
+    <View
+        android:id="@+id/divider14"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="24dp"
+        android:background="#ecf0f1"
+        app:layout_constraintTop_toBottomOf="@+id/registered"
+        tools:layout_editor_absoluteX="10dp" />
+
+    <TextView
+        android:id="@+id/ammountText14"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Money after transaction:"
+        android:textAlignment="viewStart"
+        android:textColor="#7f8c8d"
+        android:textSize="20dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider14" />
+
+    <TextView
+        android:id="@+id/moneyAfter"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/montserrat"
+        android:text="0.00€"
+        android:textAlignment="viewStart"
+        android:textSize="32dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ammountText14" />
+
+    <TextView
+        android:id="@+id/moneyAlter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Current Money in X:"
+        android:textAlignment="viewStart"
+        android:textColor="#7f8c8d"
+        android:textSize="18sp"
+        android:typeface="monospace"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moneyAfter" />
 
     <LinearLayout
         android:id="@+id/layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeText2">
+        app:layout_constraintTop_toBottomOf="@+id/moneyAlter">
 
-        <TextView
-            android:id="@+id/currentText"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/montserrat"
-            android:text="Current Money in X:"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:typeface="monospace"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/typeText2" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/current"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/montserrat"
-            android:text="0.00€"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:typeface="monospace"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currentText" />
+            <ImageButton
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
+                app:srcCompat="@drawable/ic_cancel" />
 
-        <TextView
-            android:id="@+id/ammountText9"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/montserrat"
-            android:text="Amount registered:"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:typeface="monospace"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current" />
+            <ImageButton
+                android:id="@+id/conf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:backgroundTint="@color/colorAccent"
+                app:srcCompat="@drawable/ic_confirm"
+                tools:layout_editor_absoluteX="312dp"
+                tools:layout_editor_absoluteY="360dp" />
 
-        <TextView
-            android:id="@+id/registered"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/montserrat"
-            android:text="0.00€"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:typeface="monospace"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ammountText9" />
-
-        <TextView
-            android:id="@+id/ammountText14"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/montserrat"
-            android:text="Money after transaction:"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:typeface="monospace"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/registered" />
-
-        <TextView
-            android:id="@+id/moneyAfter"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/montserrat"
-            android:text="0.00€"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:typeface="monospace"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ammountText14" />
+        </LinearLayout>
 
     </LinearLayout>
+
+
 </android.support.constraint.ConstraintLayout>
+

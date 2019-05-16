@@ -1,16 +1,16 @@
 package com.example.changekeeper;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,19 +21,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class RegIncomeScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, FrequencyDialogue.FrequencyDialogueListener, ConfirmDialogue.ConfirmDialogListener {
 
@@ -112,54 +107,74 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             }
         };
 
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        mDisplayDate.setText(day+"/"+month+"/"+year);
+
+        EditText edt = (EditText)findViewById(R.id.regText);
+        Selection.setSelection(edt.getText(), edt.getText().length());
+
+        edt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!edt.getText().toString().endsWith("€")){
+
+                    edt.setText(edt.getText().toString()+"€");
+                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
+                    ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#7f8c8d"));
+                }
+            }
+        });
+
+
         //Frequency Dropdown
-        buildFrequencySpinner();
+        buildFrequencySpinner("null");
     }
 
 
-    private void buildFrequencySpinner(){
+    private void buildFrequencySpinner(String lol){
         String[] items;
-        try {
-            FileInputStream fileInputStream = openFileInput("UserFrequencies.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            if(!lol.equals("null"))
+                items = new String[getResources().getStringArray(R.array.frequencies).length + 1];
+            else
+                items = new String[getResources().getStringArray(R.array.frequencies).length];
 
-            ArrayList<String> tempList = new ArrayList<>();
-            String line = "";
-            while((line = bufferedReader.readLine()) != null && line != "\n"){
-                tempList.add(line);
-            }
-
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-
-            items = new String[getResources().getStringArray(R.array.frequencies).length + tempList.size()];
-
-            for(int i = 0; i < getResources().getStringArray(R.array.frequencies).length-1; i++){
-                items[i] = getResources().getStringArray(R.array.frequencies)[i];
-            }
+            Log.i(TAG,"PUTAS ");
 
             int j = 0;
-            for(int i = getResources().getStringArray(R.array.frequencies).length-1; i < items.length-1; i++){
-                items[i] = tempList.get(j);
+            for(int i = 0; i < getResources().getStringArray(R.array.frequencies).length-1; i++){
+                items[i] = getResources().getStringArray(R.array.frequencies)[i];
                 j++;
             }
+            if(!lol.equals("null"))
+                items[j] = lol;
 
             items[items.length-1] = getResources().getStringArray(R.array.frequencies)[getResources().getStringArray(R.array.frequencies).length-1];
 
-        }catch (Exception e){
-            items = getResources().getStringArray(R.array.frequencies);
-
-        }
         Spinner spinner = findViewById(R.id.frequencyPicker);
         spinner.setOnItemSelectedListener(this);
 
-        this.frequencyAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-
+        this.frequencyAdapter= new ArrayAdapter<>(this, R.layout.spinner_item, items);
         spinner.setAdapter(this.frequencyAdapter);
+
+
+        if(!lol.equals("null"))
+            spinner.setSelection(items.length-2);
+
     }
 
     @Override
@@ -167,13 +182,22 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         this.frequency = frequency;
         this.weekdays = weekdays;
         this.frequencyType = type;
+        buildFrequencySpinner(this.frequency + " " + this.frequencyType);
     }
+
+    @Override
+    public void noUpdate() {
+        buildFrequencySpinner("null");
+
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if (parent.getItemAtPosition(pos).toString().equals("Custom...") && parent.getId() == R.id.frequencyPicker){
-            FrequencyDialogue frequencyDialogue = new FrequencyDialogue();
+            FrequencyDialogue frequencyDialogue = FrequencyDialogue.newInstance();
             frequencyDialogue.show(getSupportFragmentManager(), "Frequency Dialogue");
+
         }
 
         else if(parent.getId() == R.id.frequencyPicker){
@@ -196,6 +220,13 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
                     this.frequencyType = "NULL";
                     break;
 
+                    default:
+                        String[] oof = parent.getSelectedItem().toString().split(" ");
+
+                        this.frequency = oof[0];
+                        this.frequencyType = oof[1];
+                        ;
+
             }
             this.weekdays = new ArrayList<>();
         }
@@ -211,18 +242,23 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         boolean valid = true;
         //Check amount
 
-        if (((TextView)findViewById(R.id.editAmount)).getText().length() == 0){
+        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
             valid = false;
         }
 
         //Check date
-        if (((TextView)findViewById(R.id.datePicker)).getText().length() == 0){
+        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
             valid = false;
         }
 
 
         if (valid == false){
-            /*TO DO: ADD MESSAGE TELLING THE USER TO FILL ALL FIELDS*/
+            Toast toast = Toast.makeText(this,"You've got to type in an amount!", Toast.LENGTH_LONG);
+            View v = toast.getView();
+            v.setBackgroundResource(R.drawable.error_toast);
+            toast.show();
+
+            ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#c0392b"));
         }else{
             callConfirm();
         }
@@ -231,7 +267,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
 
     private void callConfirm(){
         Bundle args = new Bundle();
-        args.putString("amount",((TextView)findViewById(R.id.editAmount)).getText().toString());
+        args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString().replace("€",""));
         args.putString("regDate",((TextView)findViewById(R.id.datePicker)).getText().toString());
         args.putString("type","INCOME");
 
@@ -240,20 +276,22 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         }else{
             args.putString("dest","CARD");
         }
-        ConfirmDialogue confirmDialogue = new ConfirmDialogue();
+        ConfirmDialogue confirmDialogue = ConfirmDialogue.newInstance();
         confirmDialogue.setArguments(args);
+
         confirmDialogue.show(getSupportFragmentManager(), "Confirm Dialogue");
     }
 
     @Override
     public void confirm() {
+        Log.i(TAG,"ola :)");
         registerIncome();
     }
 
     private void registerIncome(){
         Intent intent = new Intent(this, MainActivity.class);
-        EditText editText = (EditText) findViewById(R.id.editAmount);
-        this.amount = Double.parseDouble(editText.getText().toString());
+        EditText editText = (EditText) findViewById(R.id.regText);
+        this.amount = Double.parseDouble(editText.getText().toString().replace("€",""));
         this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
 
 
@@ -297,7 +335,12 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
                 type = "CARD";
             }
             //Format: WALLET/CARD - Amount - Register Date - Person (LOANS) - Category(EXPENSES) - FrequencyType - Frequency - Weekdays - Description - PayDate(LOANS) - PAID/NOT PAID (LOANS)
-
+            String description;
+            Log.i(TAG,"Boas :) " + ((EditText)findViewById(R.id.editDescription)).getText().toString());
+            if(((EditText)findViewById(R.id.editDescription)).getText().toString().equals(""))
+                description = "Non-Specified Income";
+            else
+                description = ((EditText)findViewById(R.id.editDescription)).getText().toString();
             StringBuilder register = new StringBuilder();
             register.append(type);
             register.append(" - ");
@@ -315,7 +358,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             register.append(" - ");
             register.append(this.weekdays);
             register.append(" - ");
-            register.append(" Do Description ");
+            register.append(description);
             register.append(" - ");
             register.append("NULL");
             register.append(" - ");

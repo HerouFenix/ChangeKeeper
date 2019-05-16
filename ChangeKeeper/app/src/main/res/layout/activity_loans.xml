@@ -51,8 +51,36 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#27ae60"
+            app:tabIndicatorColor="#FF24FF1D"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorHeight="3dp"
+            app:tabInlineLabel="false"
+            app:tabSelectedTextColor="@color/colorPrimaryDark"
+            app:tabTextColor="@color/colorPrimaryDark">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Debts" />
+
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loans" />
+
+        </android.support.design.widget.TabLayout>
+    </android.support.v4.view.ViewPager>
 
     <ImageButton
         android:id="@+id/graphsButton"

@@ -1,55 +1,53 @@
 package com.example.changekeeper;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
-public class RegExpenseScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CategoryDialogue.CategoryDialogListener,ConfirmDialogue.ConfirmDialogListener, FrequencyDialogue.FrequencyDialogueListener {
+public class RegExpenseScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener,ConfirmDialogue.ConfirmDialogListener, FrequencyDialogue.FrequencyDialogueListener {
+    public static final String EXTRA_MESSAGE = "com.example.RegExpense.MESSAGE";
 
     private static final String TAG = "RegExpense";
     private TextView mDisplayDate;
+    private TextView mDisplayCategories;
+
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private int typeFlag;
     private ArrayAdapter<String> categoryAdapter;
     private ArrayAdapter<String> frequencyAdapter;
-
+    private String[] info;
     //To save:
     //Amount
     private double amount;
 
-    //Category
-    private String category;
+    private String typeMessage;
+
 
     //Date
 
@@ -61,28 +59,46 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
     private String frequencyType;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        this.typeMessage = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        String[] info = intent.getStringArrayExtra(CategoryScreen.EXTRA_MESSAGE);
 
         ActionBar toolbar = getSupportActionBar();
 
         setContentView(R.layout.activity_reg_expense_screen);
+        if(info!=null){
+            ((TextView)findViewById(R.id.regText)).setText(info[0]);
+            ((TextView)findViewById(R.id.datePicker)).setText(info[1]);
+            ((TextView)findViewById(R.id.categoryPicker)).setText(info[3]);
+            switch (info[3]){
+                case "Non-Specified":
+                    ((ImageView)findViewById(R.id.cat)).setImageResource(R.drawable.ic_other);
+                    break;
 
-        switch(message){
+                default:
+                    ((ImageView)findViewById(R.id.cat)).setImageResource(R.drawable.ic_usercat);
+                    break;
+            }
+
+            ((TextView)findViewById(R.id.editDescription)).setText(info[4]);
+            this.typeMessage = info[5];
+        }
+
+        switch(this.typeMessage){
             case "EXPENSE-WALLET":
                 this.typeFlag = 0;
                 toolbar.setTitle("Register Expense - Wallet");
-
                 break;
 
             case "EXPENSE-CARD":
                 this.typeFlag = 1;
                 toolbar.setTitle("Register Expense - Card");
-
                 break;
 
             default:
@@ -101,11 +117,27 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
                 DatePickerDialog dialog = new DatePickerDialog(
                         RegExpenseScreen.this,
-                                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                                mDateSetListener,
-                                year,month,day);
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListener,
+                        year,month,day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
+            }
+        });
+
+        mDisplayCategories = (TextView) findViewById(R.id.categoryPicker);
+        mDisplayCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), CategoryScreen.class);
+                String[] message = {((TextView)findViewById(R.id.regText)).getText().toString(),
+                                    ((TextView)findViewById(R.id.datePicker)).getText().toString(),
+                                    ((Spinner)findViewById(R.id.frequencyPicker)).getSelectedItem().toString(),
+                                    "lol",
+                                    ((TextView)findViewById(R.id.editDescription)).getText().toString(),
+                                    typeMessage};
+                intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
             }
         });
 
@@ -118,168 +150,88 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             }
         };
 
-        //Category Dropwdown
-        buildCategorySpinner();
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        mDisplayDate.setText(day+"/"+month+"/"+year);
+
+        EditText edt = (EditText)findViewById(R.id.regText);
+        Selection.setSelection(edt.getText(), edt.getText().length());
+
+        edt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!edt.getText().toString().endsWith("€")){
+
+                    edt.setText(edt.getText().toString()+"€");
+                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
+                    ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#7f8c8d"));
+                }
+
+                if(!edt.getText().toString().startsWith("-")){
+
+                    edt.setText("-"+edt.getText().toString());
+                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
+                    ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#7f8c8d"));
+                }
+            }
+        });
+
 
         //Frequency Dropdown
-        buildFrequencySpinner();
+        String lol;
+        if(this.info != null){
+            lol = this.info[2];
+        }else{
+            lol = "null";
+        }
+
+        buildFrequencySpinner(lol);
     }
 
-    private void buildCategorySpinner(){
+
+    private void buildFrequencySpinner(String lol){
         String[] items;
-        try {
-            FileInputStream fileInputStream = openFileInput("UserCategories.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        if(!lol.equals("null"))
+            items = new String[getResources().getStringArray(R.array.frequencies).length + 1];
+        else
+            items = new String[getResources().getStringArray(R.array.frequencies).length];
 
-            ArrayList<String> tempList = new ArrayList<>();
-            String line = "";
-            while((line = bufferedReader.readLine()) != null && line != "\n"){
-                tempList.add(line);
-            }
+        Log.i(TAG,"PUTAS ");
 
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-
-            items = new String[getResources().getStringArray(R.array.categories).length + tempList.size()];
-
-            for(int i = 0; i < getResources().getStringArray(R.array.categories).length-1; i++){
-                items[i] = getResources().getStringArray(R.array.categories)[i];
-            }
-
-            int j = 0;
-            for(int i = getResources().getStringArray(R.array.categories).length-1; i < items.length-1; i++){
-                items[i] = tempList.get(j);
-                j++;
-            }
-
-            items[items.length-1] = getResources().getStringArray(R.array.categories)[getResources().getStringArray(R.array.categories).length-1];
-
-        }catch (Exception e){
-            items = getResources().getStringArray(R.array.categories);
-
+        int j = 0;
+        for(int i = 0; i < getResources().getStringArray(R.array.frequencies).length-1; i++){
+            items[i] = getResources().getStringArray(R.array.frequencies)[i];
+            j++;
         }
-        Spinner spinner = findViewById(R.id.expenseCategory);
-        spinner.setOnItemSelectedListener(this);
+        if(!lol.equals("null"))
+            items[j] = lol;
 
-        this.categoryAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        spinner.setAdapter(this.categoryAdapter);
-    }
+        items[items.length-1] = getResources().getStringArray(R.array.frequencies)[getResources().getStringArray(R.array.frequencies).length-1];
 
-    @Override
-    public void updateCategories(String newCategory) {
-        boolean found = false;
-        for(String i : fileList()){
-            Log.v(TAG,i+" ------------------------");
-            if(i.equals("UserCategories.txt")){
-                found = true;
-                break;
-            }
-        }
-
-        try{
-            FileOutputStream fileOutputStream;
-            if(!found) {
-                fileOutputStream = openFileOutput("UserCategories.txt", MODE_PRIVATE);
-            }else{
-                boolean alreadyExistsFlag = false;
-                FileInputStream fileInputStream = openFileInput("UserCategories.txt");
-                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                ArrayList<String> tempList = new ArrayList<>();
-                String line = "";
-                while((line = bufferedReader.readLine()) != null){
-                    if(line.equals(newCategory))
-                        alreadyExistsFlag = true;
-                }
-
-                bufferedReader.close();
-                inputStreamReader.close();
-                fileInputStream.close();
-
-                if(alreadyExistsFlag){
-                    return;
-                }
-                fileOutputStream = openFileOutput("UserCategories.txt", MODE_APPEND);
-            }
-
-            fileOutputStream.write((newCategory+"\n").getBytes());
-            fileOutputStream.close();
-
-
-            //Update Spinner
-            Spinner spinner = findViewById(R.id.expenseCategory);
-            spinner.setOnItemSelectedListener(this);
-            String[] items = new String[this.categoryAdapter.getCount()+1];
-
-            for(int i = 0; i < this.categoryAdapter.getCount()+1; i++){
-                if (i == this.categoryAdapter.getCount()-1)
-                    items[i] = newCategory;
-                else if(i==this.categoryAdapter.getCount())
-                    items[i] = (String)this.categoryAdapter.getItem(i-1);
-                else
-                    items[i] = (String)this.categoryAdapter.getItem(i);
-            }
-
-            this.categoryAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-            spinner.setAdapter(this.categoryAdapter);
-            spinner.setSelection(this.categoryAdapter.getCount()-2);
-
-            this.category = newCategory;
-
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-
-    }
-
-    private void buildFrequencySpinner(){
-        String[] items;
-        try {
-            FileInputStream fileInputStream = openFileInput("UserFrequencies.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            ArrayList<String> tempList = new ArrayList<>();
-            String line = "";
-            while((line = bufferedReader.readLine()) != null && line != "\n"){
-                tempList.add(line);
-            }
-
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-
-            items = new String[getResources().getStringArray(R.array.frequencies).length + tempList.size()];
-
-            for(int i = 0; i < getResources().getStringArray(R.array.frequencies).length-1; i++){
-                items[i] = getResources().getStringArray(R.array.frequencies)[i];
-            }
-
-            int j = 0;
-            for(int i = getResources().getStringArray(R.array.frequencies).length-1; i < items.length-1; i++){
-                items[i] = tempList.get(j);
-                j++;
-            }
-
-            items[items.length-1] = getResources().getStringArray(R.array.frequencies)[getResources().getStringArray(R.array.frequencies).length-1];
-
-        }catch (Exception e){
-            items = getResources().getStringArray(R.array.frequencies);
-
-        }
         Spinner spinner = findViewById(R.id.frequencyPicker);
         spinner.setOnItemSelectedListener(this);
 
-        this.frequencyAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-
+        this.frequencyAdapter= new ArrayAdapter<>(this, R.layout.spinner_item, items);
         spinner.setAdapter(this.frequencyAdapter);
+
+
+        if(!lol.equals("null"))
+            spinner.setSelection(items.length-2);
+
     }
 
     @Override
@@ -287,46 +239,55 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         this.frequency = frequency;
         this.weekdays = weekdays;
         this.frequencyType = type;
+        buildFrequencySpinner(this.frequency + " " + this.frequencyType);
     }
 
     @Override
+    public void noUpdate() {
+        buildFrequencySpinner("null");
+
+    }
+
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            if(parent.getItemAtPosition(pos).toString().equals("Add a new category...") && parent.getId() == R.id.expenseCategory){
-                 CategoryDialogue categoryDialogue = new CategoryDialogue();
-                categoryDialogue.show(getSupportFragmentManager(), "Category Dialogue");
-            }
 
-            else if (parent.getItemAtPosition(pos).toString().equals("Custom...") && parent.getId() == R.id.frequencyPicker){
-                FrequencyDialogue frequencyDialogue = new FrequencyDialogue();
-                frequencyDialogue.show(getSupportFragmentManager(), "Frequency Dialogue");
-            }
+        if (parent.getItemAtPosition(pos).toString().equals("Custom...") && parent.getId() == R.id.frequencyPicker){
+            FrequencyDialogue frequencyDialogue = FrequencyDialogue.newInstance();
+            frequencyDialogue.show(getSupportFragmentManager(), "Frequency Dialogue");
 
-            else if(parent.getId() == R.id.expenseCategory){
-                this.category = parent.getSelectedItem().toString();
-            }
-            else if(parent.getId() == R.id.frequencyPicker){
-                switch(parent.getSelectedItem().toString()){
-                    case ("Every day"):
-                        this.frequency = "1";
-                        this.frequencyType = "Day";
-                        break;
-                    case ("Every month"):
-                        this.frequency = "1";
-                        this.frequencyType = "Month";
-                        break;
-                    case ("Every week"):
-                        this.frequency = "1";
-                        this.frequencyType = "Week";
-                        break;
+        }
 
-                    case ("Does not repeat"):
-                        this.frequency = "0";
-                        this.frequencyType = "NULL";
-                        break;
+        else if(parent.getId() == R.id.frequencyPicker){
+            switch(parent.getSelectedItem().toString()){
+                case ("Every day"):
+                    this.frequency = "1";
+                    this.frequencyType = "Day";
+                    break;
+                case ("Every month"):
+                    this.frequency = "1";
+                    this.frequencyType = "Month";
+                    break;
+                case ("Every week"):
+                    this.frequency = "1";
+                    this.frequencyType = "Week";
+                    break;
 
-                }
-                this.weekdays = new ArrayList<>();
+                case ("Does not repeat"):
+                    this.frequency = "0";
+                    this.frequencyType = "NULL";
+                    break;
+
+                default:
+                    String[] oof = parent.getSelectedItem().toString().split(" ");
+
+                    this.frequency = oof[0];
+                    this.frequencyType = oof[1];
+                    ;
+
             }
+            this.weekdays = new ArrayList<>();
+        }
 
     }
 
@@ -339,18 +300,23 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         boolean valid = true;
         //Check amount
 
-        if (((TextView)findViewById(R.id.editAmount)).getText().length() == 0){
+        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
             valid = false;
         }
 
         //Check date
-        if (((TextView)findViewById(R.id.datePicker)).getText().length() == 0){
+        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
             valid = false;
         }
 
 
         if (valid == false){
-            /*TO DO: ADD MESSAGE TELLING THE USER TO FILL ALL FIELDS*/
+            Toast toast = Toast.makeText(this,"You've got to type in an amount!", Toast.LENGTH_LONG);
+            View v = toast.getView();
+            v.setBackgroundResource(R.drawable.error_toast);
+            toast.show();
+
+            ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#c0392b"));
         }else{
             callConfirm();
         }
@@ -359,30 +325,33 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
     private void callConfirm(){
         Bundle args = new Bundle();
-        args.putString("amount",((TextView)findViewById(R.id.editAmount)).getText().toString());
+        args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString().replace("€",""));
         args.putString("regDate",((TextView)findViewById(R.id.datePicker)).getText().toString());
-        args.putString("type","EXPENSE");
+        args.putString("type","INCOME");
 
         if(this.typeFlag==0){
             args.putString("dest","WALLET");
         }else{
             args.putString("dest","CARD");
         }
-        ConfirmDialogue confirmDialogue = new ConfirmDialogue();
+        ConfirmDialogue confirmDialogue = ConfirmDialogue.newInstance();
         confirmDialogue.setArguments(args);
+
         confirmDialogue.show(getSupportFragmentManager(), "Confirm Dialogue");
     }
 
     @Override
     public void confirm() {
+        Log.i(TAG,"ola :)");
         registerExpense();
     }
 
     private void registerExpense(){
         Intent intent = new Intent(this, MainActivity.class);
-        EditText editText = (EditText) findViewById(R.id.editAmount);
-        this.amount = Double.parseDouble(editText.getText().toString());
+        EditText editText = (EditText) findViewById(R.id.regText);
+        this.amount = Double.parseDouble(editText.getText().toString().replace("€",""));
         this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
+
 
         //Register
         writeFile();
@@ -391,7 +360,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         if(cal.get(Calendar.DAY_OF_MONTH) == Integer.parseInt(this.date.split("/")[0]) && (cal.get(Calendar.MONTH)+1) == Integer.parseInt(this.date.split("/")[1]) && cal.get(Calendar.YEAR) == Integer.parseInt(this.date.split("/")[2]))
             updateWallet();
 
-        Toast toast = Toast.makeText(this,"Expense Regitered Successfully", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this,"Expense Registered Successfully", Toast.LENGTH_LONG);
 
         toast.show();
         startActivity(intent);
@@ -423,19 +392,23 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             }else{
                 type = "CARD";
             }
-
             //Format: WALLET/CARD - Amount - Register Date - Person (LOANS) - Category(EXPENSES) - FrequencyType - Frequency - Weekdays - Description - PayDate(LOANS) - PAID/NOT PAID (LOANS)
-
+            String description;
+            Log.i(TAG,"Boas :) " + ((EditText)findViewById(R.id.editDescription)).getText().toString());
+            if(((EditText)findViewById(R.id.editDescription)).getText().toString().equals(""))
+                description = "Non-Specified Income";
+            else
+                description = ((EditText)findViewById(R.id.editDescription)).getText().toString();
             StringBuilder register = new StringBuilder();
             register.append(type);
             register.append(" - ");
-            register.append("-"+amount+""); //Make amount negative
+            register.append(amount+"");
             register.append(" - ");
             register.append(this.date);
             register.append(" - ");
             register.append("NULL");
             register.append(" - ");
-            register.append(this.category);
+            register.append(((TextView) findViewById(R.id.categoryPicker)).toString());
             register.append(" - ");
             register.append(this.frequencyType);
             register.append(" - ");
@@ -443,12 +416,11 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             register.append(" - ");
             register.append(this.weekdays);
             register.append(" - ");
-            register.append(" Do Description ");
+            register.append(description);
             register.append(" - ");
             register.append("NULL");
             register.append(" - ");
             register.append("NULL"+"\n");
-
 
             fileOutputStream.write(register.toString().getBytes());
             fileOutputStream.close();
@@ -472,6 +444,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             }else{
                 cardAmount = cardAmount - this.amount;
             }
+
 
 
             FileOutputStream fileOutputStream = openFileOutput("UserMoney.txt", MODE_PRIVATE);

@@ -6,12 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 public class TransferDialogue extends AppCompatDialogFragment{
 
@@ -41,7 +38,7 @@ public class TransferDialogue extends AppCompatDialogFragment{
                     }
                 });
 
-        editAmount = view.findViewById(R.id.editAmount);
+        editAmount = view.findViewById(R.id.regText);
         return builder.create();
     }
 

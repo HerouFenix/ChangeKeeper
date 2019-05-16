@@ -3,6 +3,7 @@ package com.example.changekeeper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -50,27 +51,9 @@ public class GraphsScreen extends AppCompatActivity  {
         this.mPager.setAdapter(pageAdapter);
 
         this.mPager.setCurrentItem(this.currentPage);
-        if (this.currentPage == 0){
-            ((View)findViewById(R.id.graphsButton)).setBackgroundResource(R.drawable.ic_graphs);
-            ((View)findViewById(R.id.infoButton)).setBackgroundResource(R.drawable.ic_infonotselected);
-        }else{
-            ((View)findViewById(R.id.graphsButton)).setBackgroundResource(R.drawable.ic_graphsnotselected);
-            ((View)findViewById(R.id.infoButton)).setBackgroundResource(R.drawable.ic_info);
-        }
-        this.mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            public void onPageScrollStateChanged(int state) {}
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
-            public void onPageSelected(int position) {
-                if (position == 0 ){
-                    ((View)findViewById(R.id.graphsButton)).setBackgroundResource(R.drawable.ic_graphs);
-                    ((View)findViewById(R.id.infoButton)).setBackgroundResource(R.drawable.ic_infonotselected);
-                }else{
-                    ((View)findViewById(R.id.graphsButton)).setBackgroundResource(R.drawable.ic_graphsnotselected);
-                    ((View)findViewById(R.id.infoButton)).setBackgroundResource(R.drawable.ic_info);
-                }
-            }
-        });
+        TabLayout tabLayout = findViewById(R.id.tab);
+        tabLayout.setupWithViewPager(this.mPager);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.navigation_info);
@@ -134,20 +117,14 @@ public class GraphsScreen extends AppCompatActivity  {
             return NUM_PAGES;
         }
 
-
-    }
-
-    public void changeToGraphs(View view){
-        this.mPager.setCurrentItem(0);
-        this.currentPage = 0;
-
-    }
-
-    public void changeToInfo(View view){
-        this.mPager.setCurrentItem(1);
-        this.currentPage = 1;
-
-
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if(position==0){
+                return "Graphs";
+            }else{
+                return "Info";
+            }
+        }
     }
 
 }

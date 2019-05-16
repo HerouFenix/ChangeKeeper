@@ -42,9 +42,24 @@ public class GraphsGraphsFragment extends Fragment {
                 R.layout.fragment_graphs, container, false);
 
         loadInfo();
-        createGraph();
 
         return thisView;
+    }
+
+    private void loadInfo(){
+        loadFiles("UserIncomes");
+        loadFiles("UserExpenses");
+        loadFiles("UserLends");
+        loadFiles("UserBorrows");
+
+        Log.i(TAG,"Loading -oof- " + this.info.toString());
+
+        if(this.allDates.size()!=0){
+            sortInfoByDate();
+            sumInfo();
+            createGraph();
+        }
+
     }
 
     private void createGraph() {
@@ -78,7 +93,7 @@ public class GraphsGraphsFragment extends Fragment {
 
             average[i] = new DataPoint(d1.getTime(),this.info.get(this.allDates.get(i)).get(0)+this.info.get(this.allDates.get(i)).get(1));
         }
-        Log.i(TAG, "-oof-" + this.min + " " +this.max);
+        Log.i(TAG, "-oof-" + this.allDates.size());
 
 
 
@@ -133,31 +148,15 @@ public class GraphsGraphsFragment extends Fragment {
         graph.getGridLabelRenderer().setVerticalAxisTitle("Money");
 
         graph.getGridLabelRenderer().setHumanRounding(false);
+        graph.getGridLabelRenderer().setHorizontalLabelsAngle(45);
 
-        // enable scaling and scrolling
-        graph.getViewport().setScalable(true);
-        graph.getViewport().setScalableY(true);
-    }
+        graph.getGridLabelRenderer().setNumHorizontalLabels(this.allDates.size()+2);
 
-    private void loadInfo(){
-        loadFiles("UserIncomes");
-        loadFiles("UserExpenses");
-        loadFiles("UserLends");
-        loadFiles("UserBorrows");
-
-        Log.i(TAG,"Loading -oof- " + this.info.toString());
-
-        sortInfoByDate();
-        sumInfo();
-
-        for (Map.Entry<String, ArrayList<Double>> item : this.info.entrySet()) {
-            String key = item.getKey();
-            String value = item.getValue().toString();
-            Log.i(TAG,"BOAS PUTO " + key + "  " + value);
-        }
 
 
     }
+
+
 
     private void loadFiles(String fileName) {
         try {
