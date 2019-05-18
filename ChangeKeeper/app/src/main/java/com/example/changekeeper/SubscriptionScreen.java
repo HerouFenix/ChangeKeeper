@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SubscriptionScreen extends AppCompatActivity {
-    private static final String TAG = "SubscriptionScreen";
+    private static final String TAG = "AllowanceScreen";
 
 
     @Override
@@ -61,54 +61,6 @@ public class SubscriptionScreen extends AppCompatActivity {
             }
             return false;
         });
-
-        ArrayList<String> temp = loadExpenses();
-        if(temp!=null && temp.size()!=0){
-            LinearLayout ll;
-            ll = (LinearLayout) findViewById(R.id.noInfoLayout);
-            ll.removeAllViewsInLayout();
-        }
-    }
-
-    private ArrayList<String> loadExpenses() {
-        try {
-            FileInputStream fileInputStream = openFileInput("UserExpenses.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            ArrayList<String> ourAllowances = new ArrayList<>();
-            String line;
-
-            //Format: WALLET/CARD - Amount - Register Date - Person (LOANS) - Category(EXPENSES) - FrequencyType - Frequency - Weekdays - Description - PayDate(LOANS) - PAID/NOT PAID (LOANS)
-            while((line = bufferedReader.readLine()) != null){
-                if(line.split(" - ")[5].equals("NONE")){
-                    continue;
-                }
-                line =  line.split(" - ")[0] + " - " +
-                        line.split(" - ")[1] + " - " +
-                        line.split(" - ")[2] + " - " +
-                        line.split(" - ")[3] + " - " +
-                        line.split(" - ")[4] + " - " +
-                        line.split(" - ")[5] + " - " +
-                        line.split(" - ")[6] + " - " +
-                        line.split(" - ")[7] + " - " +
-                        line.split(" - ")[8] + " - " +
-                        line.split(" - ")[9] + " - " +
-                        line.split(" - ")[10];
-
-                ourAllowances.add(line);
-            }
-            bufferedReader.close();
-
-            return ourAllowances;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
 

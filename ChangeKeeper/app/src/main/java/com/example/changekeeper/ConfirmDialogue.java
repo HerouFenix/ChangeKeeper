@@ -71,7 +71,7 @@ public class ConfirmDialogue extends AppCompatDialogFragment{
         }
 
         this.amount = args.getString("amount");
-
+        Log.i(":(","fds wtfcrl " + this.amount);
 
         if(Double.parseDouble(amount)>0){
             ((TextView)view.findViewById(R.id.registered)).setText("+"+amount + "€");
@@ -79,7 +79,7 @@ public class ConfirmDialogue extends AppCompatDialogFragment{
 
         }
         else{
-            ((TextView)view.findViewById(R.id.registered)).setText("-"+amount + "€");
+            ((TextView)view.findViewById(R.id.registered)).setText(amount + "€");
             ((TextView)view.findViewById(R.id.registered)).setTextColor(Color.parseColor("#e74c3c"));
         }
 
@@ -124,7 +124,7 @@ public class ConfirmDialogue extends AppCompatDialogFragment{
             }
         }catch(Exception e){}
 
-        ImageButton butt  = view.findViewById(R.id.conf);
+        Button butt  = view.findViewById(R.id.conf);
         butt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("puto","lololo");
@@ -132,7 +132,7 @@ public class ConfirmDialogue extends AppCompatDialogFragment{
             }
         });
 
-        ImageButton butt2  = view.findViewById(R.id.cancel);
+        Button butt2  = view.findViewById(R.id.canc);
         butt2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dismiss();

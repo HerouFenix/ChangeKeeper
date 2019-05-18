@@ -12,11 +12,14 @@ import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +51,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
     private String typeMessage;
 
+    private String category;
 
     //Date
 
@@ -72,22 +76,66 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         ActionBar toolbar = getSupportActionBar();
 
         setContentView(R.layout.activity_reg_expense_screen);
+        category = ((TextView)findViewById(R.id.categoryPicker)).getText().toString();
         if(info!=null){
             ((TextView)findViewById(R.id.regText)).setText(info[0]);
             ((TextView)findViewById(R.id.datePicker)).setText(info[1]);
             ((TextView)findViewById(R.id.categoryPicker)).setText(info[3]);
+            category = info[3];
             switch (info[3]){
                 case "Non-Specified":
                     ((ImageView)findViewById(R.id.cat)).setImageResource(R.drawable.ic_other);
                     break;
+                case "Recreational":
+                    ((ImageView)findViewById(R.id.cat)).setImageResource(R.drawable.ic_recreational);
+                    break;
+                case "Food":
+                    ((ImageView)findViewById(R.id.cat)).setImageResource(R.drawable.ic_food);
+                    break;
+
 
                 default:
-                    ((ImageView)findViewById(R.id.cat)).setImageResource(R.drawable.ic_usercat);
+
+                    ((ImageView)findViewById(R.id.cat)).setImageResource(R.drawable.ic_other);
+                    try {
+                        FileInputStream fileInputStream = null;
+                        fileInputStream = openFileInput("UserCategories.txt");
+                        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                        String line = "";
+                        while ((line = bufferedReader.readLine()) != null && line != "\n") {
+                            if(line.equals(info[3])){
+                                int resID = getResources().getIdentifier(info[3].split(" -@OMEGALMAO@- ")[1],
+                                        "drawable", getPackageName());
+                                ((ImageView)findViewById(R.id.cat)).setImageResource(resID);
+
+                                ((TextView)findViewById(R.id.categoryPicker)).setText(info[3].split(" -@OMEGALMAO@- ")[0]);
+
+                                category = info[3];
+                            }
+                        }
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                     break;
             }
 
             ((TextView)findViewById(R.id.editDescription)).setText(info[4]);
             this.typeMessage = info[5];
+
+            ScrollView scroll = ((ScrollView)findViewById(R.id.scrollView2));
+            scroll.post(new Runnable() {
+                @Override
+                public void run() {
+                    scroll.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
         }
 
         switch(this.typeMessage){
@@ -158,6 +206,14 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
         EditText edt = (EditText)findViewById(R.id.regText);
         Selection.setSelection(edt.getText(), edt.getText().length());
+        edt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG,"fdss");
+                edt.setText("");
+            }
+        });
+
 
         edt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -168,25 +224,28 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
-
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable e) {
+                String s = e.toString();
+                if (s.length() > 0) {
 
-                if(!edt.getText().toString().endsWith("€")){
-
-                    edt.setText(edt.getText().toString()+"€");
-                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
-                    ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#7f8c8d"));
+                    if (!s.endsWith("€") && !s.startsWith("-")) {
+                        if (!s.equals("-" + s + "€")) {
+                            s = s.replaceAll("[^\\d.]", "");
+                            edt.setText("-" + s + "€");
+                        } else {
+                            edt.setSelection(s.length() - "€".length());
+                        }
+                    } else {
+                        edt.setSelection(s.length()  - "€".length());
+                        if (s.equals("-€")) {
+                            edt.setText("");
+                        }
+                    }
                 }
 
-                if(!edt.getText().toString().startsWith("-")){
-
-                    edt.setText("-"+edt.getText().toString());
-                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
-                    ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#7f8c8d"));
-                }
             }
         });
 
@@ -196,7 +255,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         if(this.info != null){
             lol = this.info[2];
         }else{
-            lol = "null";
+            lol = "NULL";
         }
 
         buildFrequencySpinner(lol);
@@ -205,7 +264,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
     private void buildFrequencySpinner(String lol){
         String[] items;
-        if(!lol.equals("null"))
+        if(!lol.equals("NULL"))
             items = new String[getResources().getStringArray(R.array.frequencies).length + 1];
         else
             items = new String[getResources().getStringArray(R.array.frequencies).length];
@@ -217,7 +276,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             items[i] = getResources().getStringArray(R.array.frequencies)[i];
             j++;
         }
-        if(!lol.equals("null"))
+        if(!lol.equals("NULL"))
             items[j] = lol;
 
         items[items.length-1] = getResources().getStringArray(R.array.frequencies)[getResources().getStringArray(R.array.frequencies).length-1];
@@ -229,7 +288,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         spinner.setAdapter(this.frequencyAdapter);
 
 
-        if(!lol.equals("null"))
+        if(!lol.equals("NULL"))
             spinner.setSelection(items.length-2);
 
     }
@@ -244,7 +303,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void noUpdate() {
-        buildFrequencySpinner("null");
+        buildFrequencySpinner("NULL");
 
     }
 
@@ -255,7 +314,6 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         if (parent.getItemAtPosition(pos).toString().equals("Custom...") && parent.getId() == R.id.frequencyPicker){
             FrequencyDialogue frequencyDialogue = FrequencyDialogue.newInstance();
             frequencyDialogue.show(getSupportFragmentManager(), "Frequency Dialogue");
-
         }
 
         else if(parent.getId() == R.id.frequencyPicker){
@@ -280,10 +338,10 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
                 default:
                     String[] oof = parent.getSelectedItem().toString().split(" ");
-
+                    Log.i(TAG,"sdaklsn " + parent.getSelectedItem().toString());
                     this.frequency = oof[0];
                     this.frequencyType = oof[1];
-                    ;
+                    break;
 
             }
             this.weekdays = new ArrayList<>();
@@ -300,12 +358,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         boolean valid = true;
         //Check amount
 
-        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
-            valid = false;
-        }
-
-        //Check date
-        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
+        if (!((TextView)findViewById(R.id.regText)).getText().toString().matches(".*\\d.*")){
             valid = false;
         }
 
@@ -314,9 +367,22 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             Toast toast = Toast.makeText(this,"You've got to type in an amount!", Toast.LENGTH_LONG);
             View v = toast.getView();
             v.setBackgroundResource(R.drawable.error_toast);
+            ((TextView) v.findViewById(android.R.id.message)).setTextColor(Color.parseColor("#ecf0f1"));
             toast.show();
 
+
+
             ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#c0392b"));
+            ScrollView scroll = ((ScrollView)findViewById(R.id.scrollView2));
+            scroll.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scroll.fullScroll(ScrollView.FOCUS_UP);
+                }
+            }, 250);
+            Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+            TextView oof = ((TextView)findViewById(R.id.textView8));
+            oof.startAnimation(shake);
         }else{
             callConfirm();
         }
@@ -396,7 +462,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             String description;
             Log.i(TAG,"Boas :) " + ((EditText)findViewById(R.id.editDescription)).getText().toString());
             if(((EditText)findViewById(R.id.editDescription)).getText().toString().equals(""))
-                description = "Non-Specified Income";
+                description = "Expense";
             else
                 description = ((EditText)findViewById(R.id.editDescription)).getText().toString();
             StringBuilder register = new StringBuilder();
@@ -408,7 +474,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             register.append(" - ");
             register.append("NULL");
             register.append(" - ");
-            register.append(((TextView) findViewById(R.id.categoryPicker)).toString());
+            register.append(category);
             register.append(" - ");
             register.append(this.frequencyType);
             register.append(" - ");
@@ -440,9 +506,9 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             Double cardAmount = Double.parseDouble(bufferedReader.readLine());
 
             if(this.typeFlag == 0){
-                walletAmount = walletAmount - this.amount;
+                walletAmount = walletAmount + this.amount;
             }else{
-                cardAmount = cardAmount - this.amount;
+                cardAmount = cardAmount + this.amount;
             }
 
 

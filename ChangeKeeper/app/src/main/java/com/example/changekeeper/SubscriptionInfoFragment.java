@@ -16,11 +16,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class SubscriptionInfoFragment extends Fragment {
 
     ViewGroup thisView;
-    private ArrayList<String> expenses = new ArrayList<>();
+    private ArrayList<String> incomes = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,9 +29,9 @@ public class SubscriptionInfoFragment extends Fragment {
         thisView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_info_table, container, false);
 
-        loadExpenses();
+        loadIncomes();
 
-        if(this.expenses!=null && this.expenses.size()!=0){
+        if(this.incomes!=null && this.incomes.size()!=0){
             LinearLayout ll;
             ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
             ll.removeAllViewsInLayout();
@@ -46,7 +47,7 @@ public class SubscriptionInfoFragment extends Fragment {
         return thisView;
     }
 
-    private ArrayList<String> loadExpenses() {
+    private ArrayList<String> loadIncomes() {
         try {
             FileInputStream fileInputStream = getActivity().openFileInput("UserExpenses.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
@@ -61,20 +62,8 @@ public class SubscriptionInfoFragment extends Fragment {
                 if(line.split(" - ")[5].equals("NULL")){
                     continue;
                 }
-                line =  line.split(" - ")[0] + " - " +
-                        line.split(" - ")[1] + " - " +
-                        line.split(" - ")[2] + " - " +
-                        line.split(" - ")[3] + " - " +
-                        line.split(" - ")[4] + " - " +
-                        line.split(" - ")[5] + " - " +
-                        line.split(" - ")[6] + " - " +
-                        line.split(" - ")[7] + " - " +
-                        line.split(" - ")[8] + " - " +
-                        line.split(" - ")[9] + " - " +
-                        line.split(" - ")[10];
-
                 ourAllowances.add(line);
-                this.expenses.add(line);
+                this.incomes.add(line);
             }
 
             bufferedReader.close();
@@ -92,7 +81,7 @@ public class SubscriptionInfoFragment extends Fragment {
 
     private void drawTable(){
         RecyclerView recyclerView = thisView.findViewById(R.id.infoTable);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this.expenses,getActivity());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this.incomes,getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }

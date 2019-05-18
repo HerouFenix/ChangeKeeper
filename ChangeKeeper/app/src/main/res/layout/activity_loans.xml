@@ -17,34 +17,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation" />
 
-    <TextView
-        android:id="@+id/expenseText"
-        android:layout_width="72dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="64dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Borrow"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graphsButton" />
-
-    <TextView
-        android:id="@+id/incomeText"
-        android:layout_width="72dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="64dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Lend"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:typeface="monospace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoButton" />
-
     <android.support.v4.view.ViewPager
         android:id="@+id/typeSelector"
         android:layout_width="0dp"
@@ -82,29 +54,82 @@
         </android.support.design.widget.TabLayout>
     </android.support.v4.view.ViewPager>
 
-    <ImageButton
-        android:id="@+id/graphsButton"
-        android:layout_width="74dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/colorAccent"
-        android:src="@drawable/ic_borrow"
-        android:onClick="goToBorrow"
+    <LinearLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.881"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
-        android:id="@+id/infoButton"
-        android:layout_width="74dp"
-        android:layout_height="74dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/colorAccent"
-        android:onClick="goToLend"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="50dp"
+            android:orientation="vertical">
 
-        android:src="@drawable/ic_lend"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <ImageButton
+                android:id="@+id/graphsButton"
+                android:layout_width="74dp"
+                android:layout_height="74dp"
+                android:backgroundTint="@color/colorAccent"
+                android:onClick="goToBorrow"
+                android:src="@drawable/ic_borrow"
+                app:layout_constraintBottom_toTopOf="@+id/navigation"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/expenseText"
+                android:layout_width="74dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Borrow"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:typeface="monospace"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/graphsButton" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/infoButton"
+                android:layout_width="74dp"
+                android:layout_height="74dp"
+                android:backgroundTint="@color/colorAccent"
+                android:onClick="goToLend"
+
+                android:src="@drawable/ic_lend"
+                app:layout_constraintBottom_toTopOf="@+id/navigation"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/incomeText"
+                android:layout_width="74dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/montserrat"
+                android:text="Lend"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:typeface="monospace"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/infoButton" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -31,7 +31,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/montserrat"
-                android:text="Register Expense"
+                android:text="Register Income"
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:textStyle="bold"
@@ -54,8 +54,6 @@
                     app:srcCompat="@drawable/ic_euro" />
 
                 <LinearLayout
-                    android:id="@+id/oh"
-                    android:focusableInTouchMode="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -72,7 +70,6 @@
                         android:fontFamily="@font/montserrat"
                         android:hint="0.00€"
                         android:inputType="numberDecimal"
-                        android:selectAllOnFocus="false"
                         android:textAlignment="viewStart"
                         android:textColor="#2c3e50"
                         android:textSize="28dp" />
@@ -159,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="25dp"
                 android:fontFamily="@font/montserrat"
-                android:text="Date of Registration"
+                android:text="Payday"
                 android:textAlignment="center"
                 android:textColor="#7f8c8d"
                 android:textSize="24sp" />
@@ -181,7 +178,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_frequency" />
+                    app:srcCompat="@drawable/ic_walletback" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -191,7 +188,7 @@
                     android:orientation="vertical">
 
                     <Spinner
-                        android:id="@+id/frequencyPicker"
+                        android:id="@+id/destination"
                         android:layout_width="match_parent"
                         android:layout_height="73dp"
                         android:layout_weight="1"
@@ -225,7 +222,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="25dp"
                 android:fontFamily="@font/montserrat"
-                android:text="Frequency"
+                android:text="Destination"
                 android:textAlignment="center"
                 android:textColor="#7f8c8d"
                 android:textSize="24sp" />
@@ -240,72 +237,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="25dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_person" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/cat"
+                    <EditText
+                        android:id="@+id/fromInput"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         android:layout_weight="1"
-                        app:srcCompat="@drawable/ic_usercat" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="25dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/categoryPicker"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:backgroundTint="#2ecc71"
-                            android:ems="10"
-
-                            android:fontFamily="@font/montserrat"
-                            android:hint="Select a date..."
-                            android:paddingTop="10dp"
-                            android:paddingBottom="20dp"
-                            android:text="Non-Specified"
-                            android:textAlignment="viewStart"
-                            android:textColor="#2c3e50"
-                            android:textSize="28dp" />
-
-                        <View
-                            android:id="@+id/d"
-                            android:layout_width="match_parent"
-                            android:layout_height="3dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_weight="1"
-                            android:background="@color/colorPrimary"
-                            android:backgroundTint="#2ecc71" />
-
-                    </LinearLayout>
-
+                        android:backgroundTint="#2ecc71"
+                        android:ems="10"
+                        android:fontFamily="@font/montserrat"
+                        android:hint="Enter a name..."
+                        android:inputType="text"
+                        android:textAlignment="viewStart"
+                        android:textColor="#2c3e50"
+                        android:textSize="28dp" />
                 </LinearLayout>
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/x4"
+                android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="25dp"
                 android:fontFamily="@font/montserrat"
-                android:text="Category"
+                android:text="From"
                 android:textAlignment="center"
                 android:textColor="#7f8c8d"
                 android:textSize="24sp" />
 
             <View
-                android:id="@+id/divider16"
+                android:id="@+id/divider18"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:background="?android:attr/listDivider" />

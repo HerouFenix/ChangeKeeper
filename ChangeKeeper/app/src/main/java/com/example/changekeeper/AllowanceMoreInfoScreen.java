@@ -53,7 +53,7 @@ public class AllowanceMoreInfoScreen extends AppCompatActivity{
         text = findViewById(R.id.descriptionText);
         text.setText(details[8]);
 
-        text = findViewById(R.id.regText);
+        text = findViewById(R.id.fromInput);
         text.setText(details[2]);
 
         text = findViewById(R.id.destText);

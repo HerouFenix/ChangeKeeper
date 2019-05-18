@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,11 +44,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         //Format: WALLET/CARD - Amount - Date - Person(NULL UNLESS LOAN) - Category (NULL UNLESS EXPENSE)- FrequencyType (NULL IF LOAN) - Frequency (NULL IF LOAN) - Weekdays (NULL IF LOAN) - Description
         Log.i(TAG,"ELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO " + infoList.get(position));
-        viewHolder.description.setText(infoList.get(position).split(" - ")[8]);
-        viewHolder.date.setText(infoList.get(position).split(" - ")[2]);
 
+        if(infoList.get(position).split(" - ")[8].length()<20)
+            viewHolder.description.setText(infoList.get(position).split(" - ")[8]);
+        else
+            viewHolder.description.setText(infoList.get(position).split(" - ")[8].substring(0,17)+"...");
+
+        viewHolder.date.setText(infoList.get(position).split(" - ")[2]);
         String amount = infoList.get(position).split(" - ")[1];
-        viewHolder.amount.setText(amount);
+        viewHolder.amount.setText(amount+"€");
 
         if(amount.contains("-")){
             viewHolder.amount.setTextColor(Color.parseColor("#e74c3c"));
@@ -56,7 +60,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             viewHolder.amount.setTextColor(Color.parseColor("#2ecc71"));
         }
 
-        viewHolder.type.setText(infoList.get(position).split(" - ")[0]);
+        viewHolder.walletOrCard.setText(infoList.get(position).split(" - ")[0]);
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +109,54 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+        if(infoList.get(position).split(" - ")[4].equals("NULL")){
+            if(!infoList.get(position).split(" - ")[3].equals("NULL")){
+                //Loan
+                if(amount.contains("-")){
+                    viewHolder.type.setText("Loan");
+                    viewHolder.image.setImageResource(R.drawable.ic_lend);
+                }else{
+                    viewHolder.type.setText("Debt");
+                    viewHolder.image.setImageResource(R.drawable.ic_borrow);
+                }
+            }
+            else{
+                //Income
+                viewHolder.type.setText("Income");
+                viewHolder.image.setImageResource(R.drawable.ic_income);
+
+            }
+        }else{
+            switch (infoList.get(position).split(" - ")[4]){
+                case "Non-Specified":
+                    viewHolder.type.setText("Non-Specified");
+                    viewHolder.image.setImageResource(R.drawable.ic_other);
+                    break;
+                case "Recreational":
+                    viewHolder.type.setText("Recreational");
+                    viewHolder.image.setImageResource(R.drawable.ic_recreational);
+                    break;
+                case "Food":
+                    viewHolder.type.setText("Food");
+                    viewHolder.image.setImageResource(R.drawable.ic_food);
+                    break;
+
+                default:
+                    String temp = infoList.get(position).split(" - ")[4];
+                    Log.i("SDO", "SDIJ" + temp);
+                    int resID = viewHolder.parentLayout.getResources().getIdentifier(temp.split(" -@OMEGALMAO@- ")[1],
+                            "drawable", viewHolder.parentLayout.getContext().getPackageName());
+
+                    viewHolder.image.setImageResource(resID);
+
+                    if(temp.split(" -@OMEGALMAO@- ")[0].length()<17)
+                        viewHolder.type.setText(temp.split(" -@OMEGALMAO@- ")[0]);
+                    else
+                        viewHolder.type.setText(temp.split(" -@OMEGALMAO@- ")[0].substring(0,14)+"...");
+                    break;
+            }
+        }
+
     }
 
     @Override
@@ -118,14 +170,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView date;
         TextView amount;
         TextView type;
+        TextView walletOrCard;
+        ImageView image;
         ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            description = itemView.findViewById(R.id.regText);
+            description = itemView.findViewById(R.id.fromInput);
             date = itemView.findViewById(R.id.regDate);
             amount = itemView.findViewById(R.id.amount);
+            walletOrCard = itemView.findViewById(R.id.type2);;
             type = itemView.findViewById(R.id.type);
+            image = itemView.findViewById(R.id.imageView7);
+
             parentLayout = itemView.findViewById(R.id.infoTableItem);
 
         }

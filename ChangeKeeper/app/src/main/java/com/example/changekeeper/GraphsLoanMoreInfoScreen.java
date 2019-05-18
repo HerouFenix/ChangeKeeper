@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,7 +67,7 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
         text = findViewById(R.id.descriptionText);
         text.setText(details[8]);
 
-        text = findViewById(R.id.regText);
+        text = findViewById(R.id.fromInput);
         text.setText(details[2]);
 
         text = findViewById(R.id.destText);

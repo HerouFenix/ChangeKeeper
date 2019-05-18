@@ -22,7 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class MainActivity extends AppCompatActivity implements TransferDialogue.TransferListener {
+public class MainActivity extends AppCompatActivity implements TransferDialog.TransferDialogListener {
 
     public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "MainAct";
@@ -174,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements TransferDialogue.
 
 
     public void openTransferDialogue(View view){
-        TransferDialogue transferDialogue = new TransferDialogue();
-        transferDialogue.show(getSupportFragmentManager(), "Transfer");
+        TransferDialog transferDialog = TransferDialog.newInstance();
+        transferDialog.show(getSupportFragmentManager(), "Transfer Dialogue");
     }
 
     @Override

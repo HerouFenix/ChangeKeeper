@@ -11,10 +11,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:alpha="0.8"
         android:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="@+id/layout"
         app:layout_constraintEnd_toEndOf="@+id/divider14"
         app:layout_constraintStart_toStartOf="@+id/divider14"
         app:layout_constraintTop_toTopOf="parent"
@@ -98,7 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="24dp"
-        android:background="#ecf0f1"
+        android:background="#bdc3c7"
         app:layout_constraintTop_toBottomOf="@+id/registered"
         tools:layout_editor_absoluteX="10dp" />
 
@@ -147,44 +145,39 @@
         app:layout_constraintTop_toBottomOf="@+id/moneyAfter" />
 
     <LinearLayout
-        android:id="@+id/layout"
+        android:id="@+id/linearLayout5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/moneyAlter">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/canc"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/pill_button_cancel"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Cancel"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp" />
 
-            <ImageButton
-                android:id="@+id/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="50dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_cancel" />
-
-            <ImageButton
-                android:id="@+id/conf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:backgroundTint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_confirm"
-                tools:layout_editor_absoluteX="312dp"
-                tools:layout_editor_absoluteY="360dp" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/conf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/pill_button_confirm"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Confirm"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

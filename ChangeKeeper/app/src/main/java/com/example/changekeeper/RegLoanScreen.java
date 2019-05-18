@@ -7,12 +7,19 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,19 +68,23 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
         ActionBar toolbar = getSupportActionBar();
 
-        setContentView(R.layout.activity_reg_loan_screen);
+        setContentView(R.layout.activity_reg_loan_screen_temp);
+
 
 
         switch(message){
             case "BORROW":
                 this.typeFlag = 0;
-                ((TextView)findViewById(R.id.typeText)).setText("Borrow");
+                ((TextView)findViewById(R.id.typeText4)).setText("Borrow");
+                ((TextView)findViewById(R.id.textView10)).setText("From");
 
                 break;
 
             case "LEND":
                 this.typeFlag = 1;
-                ((TextView)findViewById(R.id.typeText)).setText("Lend");
+                ((TextView)findViewById(R.id.typeText4)).setText("Lend");
+                ((TextView)findViewById(R.id.textView10)).setText("To");
+
 
                 break;
 
@@ -84,7 +95,13 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         Log.v(TAG,"OLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
         //Date
-        mDisplayDate = (TextView) findViewById(R.id.regText);
+        mDisplayDate = (TextView) findViewById(R.id.datePicker);
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        mDisplayDate.setText(day+"/"+month+"/"+year);
+
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +130,70 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         };
 
 
+        EditText edt = (EditText)findViewById(R.id.regText);
+        Selection.setSelection(edt.getText(), edt.getText().length());
+        edt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edt.setText("");
+            }
+        });
+
+
+        edt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable e) {
+                if(typeFlag == 0){
+                    String s = e.toString();
+                    if (s.length() > 0) {
+                        if (!s.endsWith("€")) {
+                            if (!s.equals(s + "€")) {
+                                s = s.replaceAll("[^\\d.]", "");
+                                edt.setText(s + "€");
+                            } else {
+                                edt.setSelection(s.length() - "€".length());
+                            }
+                        } else {
+                            edt.setSelection(s.length() - "€".length());
+                            if (s.equals("€")) {
+                                edt.setText("");
+                            }
+                        }
+                    }
+                }else{
+                    String s = e.toString();
+                    if (s.length() > 0) {
+
+                        if (!s.endsWith("€") && !s.startsWith("-")) {
+                            if (!s.equals("-" + s + "€")) {
+                                s = s.replaceAll("[^\\d.]", "");
+                                edt.setText("-" + s + "€");
+                            } else {
+                                edt.setSelection(s.length() - "€".length());
+                            }
+                        } else {
+                            edt.setSelection(s.length()  - "€".length());
+                            if (s.equals("-€")) {
+                                edt.setText("");
+                            }
+                        }
+                    }
+                }
+
+            }
+        });
+
         //Destination Dropwdown
         buildDestinationSpinner();
 
@@ -123,15 +204,19 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         Spinner spinner = findViewById(R.id.destination);
         spinner.setOnItemSelectedListener(this);
 
-        this.destinationAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        this.destinationAdapter= new ArrayAdapter<>(this, R.layout.spinner_item, items);
         spinner.setAdapter(this.destinationAdapter);
+
     }
 
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
          this.destination = parent.getSelectedItem().toString();
-
+        if(this.destination.equals("WALLET"))
+            ((ImageView)findViewById(R.id.imageView)).setImageResource(R.drawable.ic_walletback);
+        else
+            ((ImageView)findViewById(R.id.imageView)).setImageResource(R.drawable.ic_cardback);
 
 
     }
@@ -150,23 +235,28 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
             valid = false;
         }
 
-        //Check person
-        if (((TextView)findViewById(R.id.fromInput)).getText().length() == 0){
-            valid = false;
-        }
-
-        //Check date
-        if (((TextView)findViewById(R.id.regText)).getText().length() == 0){
-            valid = false;
-        }
-
-        if (((TextView)findViewById(R.id.descriptionInput)).getText().length() == 0){
-            this.description = "";
-        }
-
 
         if (valid == false){
-            /*TO DO: ADD MESSAGE TELLING THE USER TO FILL ALL FIELDS*/
+            Toast toast = Toast.makeText(this,"You've got to type in an amount!", Toast.LENGTH_LONG);
+            View v = toast.getView();
+            v.setBackgroundResource(R.drawable.error_toast);
+            ((TextView) v.findViewById(android.R.id.message)).setTextColor(Color.parseColor("#ecf0f1"));
+
+            toast.show();
+
+            ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#c0392b"));
+            ScrollView scroll = ((ScrollView)findViewById(R.id.scrollView2));
+            scroll.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scroll.fullScroll(ScrollView.FOCUS_UP);
+                }
+            }, 300);
+            Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+            TextView oof = ((TextView)findViewById(R.id.textView8));
+            oof.startAnimation(shake);
+
+
         }else{
             callConfirm();
         }
@@ -175,7 +265,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
     private void callConfirm(){
         Bundle args = new Bundle();
-        args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString());
+        args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString().replace("€",""));
         switch(this.typeFlag){
             case 0:
                 args.putString("type","INCOME");
@@ -215,10 +305,20 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         Intent intent = new Intent(this, LoanScreen.class);
         EditText editText = (EditText) findViewById(R.id.regText);
 
-        this.amount = Double.parseDouble(editText.getText().toString());
-        this.date = ((TextView)findViewById(R.id.regText)).getText().toString();
-        this.person = ((TextView)findViewById(R.id.fromInput)).getText().toString();
-        this.description = ((TextView)findViewById(R.id.descriptionInput)).getText().toString();
+        this.amount = Double.parseDouble(editText.getText().toString().replace("€",""));
+        this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
+        if(((TextView)findViewById(R.id.fromInput)).getText().toString().length() == 0)
+            this.person = "Anonymous";
+        else
+            this.person = ((TextView)findViewById(R.id.fromInput)).getText().toString();
+
+        if(((TextView)findViewById(R.id.editDescription)).getText().toString().length() == 0)
+            if(this.typeFlag == 1)
+                this.description = "Borrowed money";
+            else
+                this.description = "Lent money";
+        else
+            this.description = ((TextView)findViewById(R.id.editDescription)).getText().toString();
 
         //Register
         writeFile();
@@ -292,7 +392,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
             register.append(" - ");
             register.append("NULL");
             register.append(" - ");
-            register.append(" Do Description ");
+            register.append(this.description);
             register.append(" - ");
             register.append(this.date);
             register.append(" - ");

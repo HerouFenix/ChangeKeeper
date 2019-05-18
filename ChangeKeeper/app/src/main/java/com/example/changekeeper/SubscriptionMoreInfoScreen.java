@@ -55,9 +55,9 @@ public class SubscriptionMoreInfoScreen extends AppCompatActivity{
         text.setText(details[8]);
 
         text = findViewById(R.id.categoryText);
-        text.setText(details[4]);
+        text.setText(details[4].split(" -@OMEGALMAO@- ")[0]);
 
-        text = findViewById(R.id.regText);
+        text = findViewById(R.id.fromInput);
         text.setText(details[2]);
 
         text = findViewById(R.id.destText);
