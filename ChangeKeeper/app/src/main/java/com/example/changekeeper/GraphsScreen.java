@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class GraphsScreen extends AppCompatActivity  {
+public class GraphsScreen extends AppCompatActivity  implements  SearchDialog.SearchDialogListener{
 
     public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "GRAPHS";
@@ -93,6 +93,16 @@ public class GraphsScreen extends AppCompatActivity  {
         }
     }
 
+    @Override
+    public void search(String from, String to, String desc) {
+
+    }
+
+    @Override
+    public void noUpdate() {
+
+    }
+
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         private Fragment graphsFrag;
@@ -107,9 +117,9 @@ public class GraphsScreen extends AppCompatActivity  {
         @Override
         public Fragment getItem(int position) {
             if (position == 0)
-                return this.graphsFrag;
-            else
                 return this.infoFrag;
+            else
+                return this.graphsFrag;
         }
 
         @Override
@@ -120,9 +130,9 @@ public class GraphsScreen extends AppCompatActivity  {
         @Override
         public CharSequence getPageTitle(int position) {
             if(position==0){
-                return "Graphs";
-            }else{
                 return "Info";
+            }else{
+                return "Graphs";
             }
         }
     }

@@ -1,10 +1,14 @@
 package com.example.changekeeper;
 
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -13,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -40,6 +45,15 @@ public class MainWalletFragment extends Fragment {
 
         //Show Money Values
         readFile();
+
+        ImageView button = (ImageView)thisView.findViewById(R.id.imageView);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getActivity()).changeView();
+            }
+        });
 
         return thisView;
     }

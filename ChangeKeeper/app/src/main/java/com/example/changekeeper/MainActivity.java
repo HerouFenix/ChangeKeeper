@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
 
     private ActionBar toolbar;
 
-    private ViewPager mPager;
+    public ViewPager mPager;
     private PagerAdapter pageAdapter;
     private static final int NUM_PAGES = 2;
 
@@ -38,6 +38,18 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        boolean found = false;
+
+        for(String i : fileList()){
+            Log.v(TAG,i+" ------------------------");
+            if(i.equals("UserMoney.txt")){
+                found = true;
+                break;
+            }
+        }
+
+        if(!found)
+            startActivity(new Intent(this, IntroActivity.class));
 
         toolbar = getSupportActionBar();
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -93,6 +105,14 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
 
         Log.v(TAG,"HELLOOOOOOOOOOOOOOOOOOOOOOOO :D");
 
+    }
+
+    public void changeView(){
+        if(mPager.getCurrentItem()==0){
+            mPager.setCurrentItem(1);
+        }else{
+            mPager.setCurrentItem(0);
+        }
     }
 
     @Override
@@ -193,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
 
             inputStreamReader.close();
             fileInputStream.close();
+
+            amount = amount.replace("€","");
 
             switch(((TextView) findViewById(R.id.transferText)).getText().toString()){
                 case "Transfer to Card":

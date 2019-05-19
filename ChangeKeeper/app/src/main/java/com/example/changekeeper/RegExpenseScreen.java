@@ -252,8 +252,9 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
         //Frequency Dropdown
         String lol;
-        if(this.info != null){
-            lol = this.info[2];
+        if(info != null){
+            Log.i(TAG,"FDS WTF DUDE " + info[2]);
+            lol = info[2];
         }else{
             lol = "NULL";
         }
@@ -288,8 +289,9 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         spinner.setAdapter(this.frequencyAdapter);
 
 
-        if(!lol.equals("NULL"))
+        if(!lol.equals("NULL")){
             spinner.setSelection(items.length-2);
+        }
 
     }
 

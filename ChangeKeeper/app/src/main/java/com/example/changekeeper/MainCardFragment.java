@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -41,8 +42,19 @@ public class MainCardFragment extends Fragment {
         //Show Money Values
         readFile();
 
+        ImageView button = (ImageView)thisView.findViewById(R.id.imageView);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getActivity()).changeView();
+            }
+        });
+
         return thisView;
     }
+
+
 
     public void updateAmount(){
         readFile();

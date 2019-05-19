@@ -1,5 +1,8 @@
 package com.example.changekeeper;
 
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -52,6 +56,15 @@ public class AllInfoFragment extends Fragment {
         for (String i : this.all)
             Log.i(TAG,"oof " + i);
         drawTable();
+
+        ImageButton search = (ImageButton) thisView.findViewById(R.id.searchButton);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchDialog searchDialog = SearchDialog.newInstance();
+                searchDialog.show(getActivity().getSupportFragmentManager(), "Search Dialogue");
+            }
+        });
 
         return thisView;
     }
@@ -196,4 +209,6 @@ public class AllInfoFragment extends Fragment {
             this.all.set(k,key);
         }
     }
+
+
 }

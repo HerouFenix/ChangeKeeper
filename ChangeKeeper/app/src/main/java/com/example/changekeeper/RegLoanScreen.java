@@ -314,9 +314,9 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
         if(((TextView)findViewById(R.id.editDescription)).getText().toString().length() == 0)
             if(this.typeFlag == 1)
-                this.description = "Borrowed money";
-            else
                 this.description = "Lent money";
+            else
+                this.description = "Borrowed money";
         else
             this.description = ((TextView)findViewById(R.id.editDescription)).getText().toString();
 
@@ -371,10 +371,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
             StringBuilder register = new StringBuilder();
             register.append(this.destination);
             register.append(" - ");
-            if(fileName.equals("UserBorrows"))
-                register.append(this.amount+"");
-            else
-                register.append("-"+this.amount+"");
+            register.append(this.amount+"");
             register.append(" - ");
             Calendar cal = Calendar.getInstance();
             int year = cal.get(Calendar.YEAR);

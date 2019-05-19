@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -81,12 +83,16 @@ public class TransferDialog extends AppCompatDialogFragment{
                 String amount = editAmount.getText().toString();
                 if (!amount.matches(".*\\d.*")){
                     ((TextView)view.findViewById(R.id.textView4)).setTextColor(Color.parseColor("#c0392b"));
+                    Animation shake = AnimationUtils.loadAnimation(view.getContext(), R.anim.shake);
+
+                    ((TextView)view.findViewById(R.id.textView4)).startAnimation(shake);
                 }else{
                     amount.replace("€","");
                     amount.replace("-","");
 
-
                     listener.updateTransfer(amount);
+
+                    dismiss();
                 }
 
             }
