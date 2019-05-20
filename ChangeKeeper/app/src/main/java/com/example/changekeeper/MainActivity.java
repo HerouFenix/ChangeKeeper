@@ -14,6 +14,7 @@ import android.view.View;
 
 import android.support.v4.app.FragmentManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -21,11 +22,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TransferDialog.TransferDialogListener {
 
     public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "MainAct";
+    private static boolean sync = false;
 
     private ActionBar toolbar;
 
@@ -50,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
 
         if(!found)
             startActivity(new Intent(this, IntroActivity.class));
+        else if(!sync){
+            syncInfo();
+            sync = true;
+        }
 
         toolbar = getSupportActionBar();
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -198,6 +207,44 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
         transferDialog.show(getSupportFragmentManager(), "Transfer Dialogue");
     }
 
+    public void updateAmounts(String amount,String destination){
+        try {
+            FileInputStream fileInputStream = openFileInput("UserMoney.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            Double walletAmount = Double.parseDouble(bufferedReader.readLine());
+            Double cardAmount = Double.parseDouble(bufferedReader.readLine());
+
+
+
+            inputStreamReader.close();
+            fileInputStream.close();
+
+            amount = amount.replace("€","");
+
+            switch(destination){
+                case "WALLET":
+                    walletAmount = walletAmount + Double.parseDouble(amount);
+                    break;
+                case "CARD":
+                    cardAmount = cardAmount + Double.parseDouble(amount);
+                    break;
+            }
+
+            FileOutputStream fileOutputStream = openFileOutput("UserMoney.txt", MODE_PRIVATE);
+            fileOutputStream.write((walletAmount+"\n").getBytes());
+            fileOutputStream.write((cardAmount+"\n").getBytes());
+            fileOutputStream.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void updateTransfer(String amount) {
         try {
@@ -244,8 +291,168 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    public void syncInfo(){
+        Toast toast = Toast.makeText(this,"Checking for scheduled transactions", Toast.LENGTH_SHORT);
+        toast.show();
+
+        boolean inc = updateFile("UserIncomes");
+        boolean exp = updateFile("UserExpenses");
+        boolean deb = updateFile("UserBorrows");
+        boolean loan = updateFile("UserLends");
+
+        if(inc || exp || deb || loan){
+            String t = "New ";
+            if(inc)
+                t = t+"Incomes, ";
+            if(exp)
+                t = t+"Expenses ";
+            if(deb)
+                t = t + "Debt payments, ";
+            if(loan)
+                t = t + "Loan payments, ";
+
+            t = t + "have been registered!";
+
+            toast = Toast.makeText(this,t, Toast.LENGTH_LONG);
+            toast.show();
+        }else{
+            toast = Toast.makeText(this,"There aren't any new scheduled transactions for today!", Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+    private boolean updateFile(String file) {
+        boolean test = false;
+        try {
+            FileInputStream fileInputStream = openFileInput(file+".txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            ArrayList<String> all = new ArrayList<>();
+            String line;
+
+            //Format: WALLET/CARD - Amount - Date - Person(NULL UNLESS LOAN) - Category (NULL UNLESS EXPENSE)- FrequencyType (NULL IF LOAN) - Frequency (NULL IF LOAN) - Weekdays (NULL IF LOAN) - Description
+            while((line = bufferedReader.readLine()) != null){
+                if(!line.split(" - ")[10].equals("PAID")){
+                    Calendar cal = Calendar.getInstance();
+                    int year = cal.get(Calendar.YEAR);
+                    int month = cal.get(Calendar.MONTH) + 1;
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    String currentDate = day+"/"+month+"/"+year;
+
+                    String[] temp = line.split(" - ");
+
+                    Calendar cal2 = Calendar.getInstance();
+                    cal.set(Calendar.YEAR,Integer.parseInt(temp[2].split("/")[2]));
+                    cal.set(Calendar.MONTH,Integer.parseInt(temp[2].split("/")[1]));
+                    cal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(temp[2].split("/")[0]));
+
+                    if(cal.after(cal2)){
+                        updateAmounts(temp[1],temp[0]);
+                        temp[10] = "PAID";
+                        line = temp[0] + " - " +
+                                temp[1] + " - " +
+                                temp[2] + " - " +
+                                temp[3] + " - " +
+                                temp[4] + " - " +
+                                temp[5] + " - " +
+                                temp[6] + " - " +
+                                temp[7] + " - " +
+                                temp[8] + " - " +
+                                temp[9] + " - " +
+                                temp[10];
+                        test = true;
+                    }
+                }
+                else if(!line.split(" - ")[9].equals("NULL")){
+                    String[] temp = line.split(" - ");
+                    temp[9] = calcNextDate(temp[2],temp[6],temp[5]);
+
+                    updateAmounts(temp[1],temp[0]);
+                    line = temp[0] + " - " +
+                            temp[1] + " - " +
+                            temp[2] + " - " +
+                            temp[3] + " - " +
+                            temp[4] + " - " +
+                            temp[5] + " - " +
+                            temp[6] + " - " +
+                            temp[7] + " - " +
+                            temp[8] + " - " +
+                            temp[9] + " - " +
+                            temp[10];
+
+                    test = true;
+                }
+                all.add(line);
+                /*for (String i : this.all)
+                    Log.i(TAG,"oof " + i);*/
+            }
+
+            bufferedReader.close();
+
+            FileOutputStream fileOutputStream = openFileOutput(file+".txt", MODE_PRIVATE);
+            for(String i : all)
+                fileOutputStream.write((i+"\n").getBytes());
+            fileOutputStream.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return test;
+    }
+
+    private String calcNextDate(String dateOfReg,String frequency, String type){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(dateOfReg.split("/")[0]));
+        cal.set(Calendar.MONTH,Integer.parseInt(dateOfReg.split("/")[1])-1);
+        cal.set(Calendar.YEAR,Integer.parseInt(dateOfReg.split("/")[2]));
+
+        Calendar current = Calendar.getInstance();
+
+
+        switch(type){
+            case "Day":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+            case "Week":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.WEEK_OF_MONTH, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+            case "Month":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.MONTH, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+            case "Year":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.YEAR, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+        }
+
+        //Add support for weekdays
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String date = day+"/"+month+"/"+year;
+
+        return date;
+    }
 }

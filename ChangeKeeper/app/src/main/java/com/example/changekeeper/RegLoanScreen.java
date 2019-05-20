@@ -67,7 +67,6 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
         ActionBar toolbar = getSupportActionBar();
-
         setContentView(R.layout.activity_reg_loan_screen_temp);
 
 
@@ -77,6 +76,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
                 this.typeFlag = 0;
                 ((TextView)findViewById(R.id.typeText4)).setText("Borrow");
                 ((TextView)findViewById(R.id.textView10)).setText("From");
+                toolbar.setTitle("Borrow money");
 
                 break;
 
@@ -84,6 +84,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
                 this.typeFlag = 1;
                 ((TextView)findViewById(R.id.typeText4)).setText("Lend");
                 ((TextView)findViewById(R.id.textView10)).setText("To");
+                toolbar.setTitle("Lend money");
 
 
                 break;
@@ -132,10 +133,26 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
         EditText edt = (EditText)findViewById(R.id.regText);
         Selection.setSelection(edt.getText(), edt.getText().length());
+        edt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+
+                }else{
+                    if(edt.getText().toString().length()>1)
+                        Selection.setSelection(edt.getText(), edt.getText().length()-1);
+                }
+
+            }
+        });
+
         edt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                edt.setText("");
+            public void onClick(View v) {
+                if(edt.getText().toString().length()>1)
+                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
+
+
             }
         });
 

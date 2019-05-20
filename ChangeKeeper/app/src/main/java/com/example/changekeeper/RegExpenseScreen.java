@@ -206,14 +206,28 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
         EditText edt = (EditText)findViewById(R.id.regText);
         Selection.setSelection(edt.getText(), edt.getText().length());
-        edt.setOnClickListener(new View.OnClickListener() {
+        edt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View view) {
-                Log.i(TAG,"fdss");
-                edt.setText("");
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+
+                }else{
+                    if(edt.getText().toString().length()>1)
+                        Selection.setSelection(edt.getText(), edt.getText().length()-1);
+                }
+
             }
         });
 
+        edt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edt.getText().toString().length()>1)
+                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
+
+
+            }
+        });
 
         edt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -230,7 +244,6 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             public void afterTextChanged(Editable e) {
                 String s = e.toString();
                 if (s.length() > 0) {
-
                     if (!s.endsWith("€") && !s.startsWith("-")) {
                         if (!s.equals("-" + s + "€")) {
                             s = s.replaceAll("[^\\d.]", "");
@@ -486,9 +499,21 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             register.append(" - ");
             register.append(description);
             register.append(" - ");
-            register.append("NULL");
+            if(!this.frequencyType.equals("NULL"))
+                register.append(calcNextDate(this.date,this.frequency,this.frequencyType));
+            else
+                register.append("NULL");
             register.append(" - ");
-            register.append("NULL"+"\n");
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            String currentDate = day+"/"+month+"/"+year;
+            if(!this.date.equals(currentDate))
+                register.append("NOT PAID"+"\n");
+            else{
+                register.append("PAID"+"\n");
+            }
 
             fileOutputStream.write(register.toString().getBytes());
             fileOutputStream.close();
@@ -529,5 +554,55 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
         }
     }
 
+
+    private String calcNextDate(String dateOfReg,String frequency, String type){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(dateOfReg.split("/")[0]));
+        cal.set(Calendar.MONTH,Integer.parseInt(dateOfReg.split("/")[1])-1);
+        cal.set(Calendar.YEAR,Integer.parseInt(dateOfReg.split("/")[2]));
+
+        Calendar current = Calendar.getInstance();
+
+
+        switch(type){
+            case "Day":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+            case "Week":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.WEEK_OF_MONTH, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+            case "Month":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.MONTH, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+            case "Year":
+                do {
+                    if(cal.equals(current))
+                        break;
+                    cal.add(Calendar.YEAR, Integer.parseInt(frequency));
+                }while(current.after(cal));
+                break;
+        }
+
+        //Add support for weekdays
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String date = day+"/"+month+"/"+year;
+
+        return date;
+    }
 
 }
