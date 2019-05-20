@@ -35,8 +35,8 @@
             app:tabIndicatorFullWidth="true"
             app:tabIndicatorHeight="3dp"
             app:tabInlineLabel="false"
-            app:tabSelectedTextColor="@color/colorPrimaryDark"
-            app:tabTextColor="@color/colorPrimaryDark">
+            app:tabSelectedTextColor="#ecf0f1"
+            app:tabTextColor="#ecf0f1">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/font"
