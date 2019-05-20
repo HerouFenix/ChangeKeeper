@@ -228,7 +228,7 @@
                 android:background="@drawable/pill_button_cancel"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="Cancel"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="#ecf0f1"
                 android:textSize="18sp" />
 
             <Button
@@ -240,7 +240,7 @@
                 android:background="@drawable/pill_button_confirm"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="Confirm"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="#ecf0f1"
                 android:textSize="18sp" />
 
         </LinearLayout>

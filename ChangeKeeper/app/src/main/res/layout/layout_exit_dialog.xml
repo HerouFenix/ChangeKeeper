@@ -82,7 +82,7 @@
             android:background="@drawable/pill_button_cancel"
             android:fontFamily="@font/montserrat_bold"
             android:text="Stay"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="#ecf0f1"
             android:textSize="18sp" />
 
         <Button
@@ -94,7 +94,7 @@
             android:background="@drawable/pill_button_confirm"
             android:fontFamily="@font/montserrat_bold"
             android:text="Leave"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="#ecf0f1"
             android:textSize="18sp" />
 
     </LinearLayout>
