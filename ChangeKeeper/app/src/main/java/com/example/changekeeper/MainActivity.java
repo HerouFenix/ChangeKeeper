@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements TransferDialog.TransferDialogListener {
+public class MainActivity extends AppCompatActivity implements TransferDialog.TransferDialogListener, ConfirmDialogue2.ConfirmDialogListener2 {
 
     public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "MainAct";
@@ -133,6 +133,59 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
         } else {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
+    }
+
+    @Override
+    public void confirm(String amount) {
+        try {
+            FileInputStream fileInputStream = openFileInput("UserMoney.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            Double walletAmount = Double.parseDouble(bufferedReader.readLine());
+            Double cardAmount = Double.parseDouble(bufferedReader.readLine());
+
+
+
+            inputStreamReader.close();
+            fileInputStream.close();
+
+            amount = amount.replace("€","");
+            Toast toast;
+            switch(((TextView) findViewById(R.id.transferText)).getText().toString()){
+                case "Transfer to Card":
+                    walletAmount = walletAmount - Double.parseDouble(amount);
+                    cardAmount = cardAmount + Double.parseDouble(amount);
+                    toast = Toast.makeText(this,"Money transferred from wallet to card successfully!", Toast.LENGTH_LONG);
+                    toast.show();
+                    break;
+                case "Transfer to Wallet":
+                    walletAmount = walletAmount + Double.parseDouble(amount);
+                    cardAmount = cardAmount - Double.parseDouble(amount);
+                    toast = Toast.makeText(this,"Money transferred from card to wallet successfully!", Toast.LENGTH_LONG);
+                    toast.show();
+                    break;
+            }
+
+            FileOutputStream fileOutputStream = openFileOutput("UserMoney.txt", MODE_PRIVATE);
+            fileOutputStream.write((walletAmount+"\n").getBytes());
+            fileOutputStream.write((cardAmount+"\n").getBytes());
+            fileOutputStream.close();
+
+            ((ScreenSlidePagerAdapter) this.pageAdapter).updateWallet();
+            ((ScreenSlidePagerAdapter) this.pageAdapter).updateCard();
+            int current = this.mPager.getCurrentItem();
+            this.mPager.setAdapter(pageAdapter);
+            this.mPager.setCurrentItem(current);
+
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -294,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
     }
 
     public void syncInfo(){
-        Toast toast = Toast.makeText(this,"Checking for scheduled transactions", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this,"Checking for scheduled transactions", Toast.LENGTH_LONG);
         toast.show();
 
         boolean inc = updateFile("UserIncomes");
@@ -347,10 +400,11 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
 
                     Calendar cal2 = Calendar.getInstance();
                     cal.set(Calendar.YEAR,Integer.parseInt(temp[2].split("/")[2]));
-                    cal.set(Calendar.MONTH,Integer.parseInt(temp[2].split("/")[1]));
+                    cal.set(Calendar.MONTH,Integer.parseInt(temp[2].split("/")[1])-1);
                     cal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(temp[2].split("/")[0]));
 
                     if(cal.after(cal2)){
+                        Log.i(TAG,"oioi" + line);
                         updateAmounts(temp[1],temp[0]);
                         temp[10] = "PAID";
                         line = temp[0] + " - " +

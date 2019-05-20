@@ -141,9 +141,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     viewHolder.image.setImageResource(R.drawable.ic_food);
                     break;
 
+                case "Debt payment":
+                    viewHolder.type.setText("Debt Payment");
+                    viewHolder.image.setImageResource(R.drawable.ic_lend);
+                    break;
+
                 default:
                     String temp = infoList.get(position).split(" - ")[4];
                     Log.i("SDO", "SDIJ" + temp);
+
                     int resID = viewHolder.parentLayout.getResources().getIdentifier(temp.split(" -@OMEGALMAO@- ")[1],
                             "drawable", viewHolder.parentLayout.getContext().getPackageName());
 

@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -33,7 +34,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RegIncomeScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, FrequencyDialogue.FrequencyDialogueListener, ConfirmDialogue.ConfirmDialogListener {
+public class RegIncomeScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, FrequencyDialogue.FrequencyDialogueListener, ConfirmDialogue.ConfirmDialogListener, ExitDialog.ExitDialogListener {
 
     private static final String TAG = "RegIncome";
     private TextView mDisplayDate;
@@ -154,13 +155,23 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable e) {
 
-                if(!edt.getText().toString().endsWith("€")){
-
-                    edt.setText(edt.getText().toString()+"€");
-                    Selection.setSelection(edt.getText(), edt.getText().length()-1);
-                    ((TextView)findViewById(R.id.textView8)).setTextColor(Color.parseColor("#7f8c8d"));
+                String s = e.toString();
+                if (s.length() > 0) {
+                    if (!s.endsWith("€")) {
+                        if (!s.equals(s + "€")) {
+                            s = s.replaceAll("[^\\d.]", "");
+                            edt.setText(s + "€");
+                        } else {
+                            edt.setSelection(s.length() - "€".length());
+                        }
+                    } else {
+                        edt.setSelection(s.length() - "€".length());
+                        if (s.equals("€")) {
+                            edt.setText("");
+                        }
+                    }
                 }
             }
         });
@@ -170,6 +181,15 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         buildFrequencySpinner("NULL");
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                ExitDialog exitDialog = ExitDialog.newInstance();
+                exitDialog.show(getSupportFragmentManager(), "Exit Dialogue");
+        }
+        return true;
+    }
 
     private void buildFrequencySpinner(String lol){
         String[] items;
@@ -303,6 +323,7 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString().replace("€",""));
         args.putString("regDate",((TextView)findViewById(R.id.datePicker)).getText().toString());
         args.putString("type","INCOME");
+        args.putString("frequency",((Spinner)findViewById(R.id.frequencyPicker)).getSelectedItem().toString());
 
         if(this.typeFlag==0){
             args.putString("dest","WALLET");
@@ -495,5 +516,10 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
         String date = day+"/"+month+"/"+year;
 
         return date;
+    }
+
+    @Override
+    public void exit() {
+        finish();
     }
 }

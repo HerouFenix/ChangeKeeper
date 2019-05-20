@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -33,7 +34,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RegExpenseScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener,ConfirmDialogue.ConfirmDialogListener, FrequencyDialogue.FrequencyDialogueListener {
+public class RegExpenseScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener,ConfirmDialogue.ConfirmDialogListener, ExitDialog.ExitDialogListener,FrequencyDialogue.FrequencyDialogueListener {
     public static final String EXTRA_MESSAGE = "com.example.RegExpense.MESSAGE";
 
     private static final String TAG = "RegExpense";
@@ -244,16 +245,16 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
             public void afterTextChanged(Editable e) {
                 String s = e.toString();
                 if (s.length() > 0) {
-                    if (!s.endsWith("€") && !s.startsWith("-")) {
-                        if (!s.equals("-" + s + "€")) {
+                    if (!s.endsWith("€")) {
+                        if (!s.equals(s + "€")) {
                             s = s.replaceAll("[^\\d.]", "");
-                            edt.setText("-" + s + "€");
+                            edt.setText(s + "€");
                         } else {
                             edt.setSelection(s.length() - "€".length());
                         }
                     } else {
-                        edt.setSelection(s.length()  - "€".length());
-                        if (s.equals("-€")) {
+                        edt.setSelection(s.length() - "€".length());
+                        if (s.equals("€")) {
                             edt.setText("");
                         }
                     }
@@ -406,9 +407,10 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
     private void callConfirm(){
         Bundle args = new Bundle();
-        args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString().replace("€",""));
+        args.putString("amount","-"+((TextView)findViewById(R.id.regText)).getText().toString().replace("€",""));
         args.putString("regDate",((TextView)findViewById(R.id.datePicker)).getText().toString());
         args.putString("type","INCOME");
+        args.putString("frequency",((Spinner)findViewById(R.id.frequencyPicker)).getSelectedItem().toString());
 
         if(this.typeFlag==0){
             args.putString("dest","WALLET");
@@ -430,7 +432,7 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
     private void registerExpense(){
         Intent intent = new Intent(this, MainActivity.class);
         EditText editText = (EditText) findViewById(R.id.regText);
-        this.amount = Double.parseDouble(editText.getText().toString().replace("€",""));
+        this.amount = Double.parseDouble(editText.getText().toString().replace("€",""))*(-1);
         this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
 
 
@@ -445,6 +447,20 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
 
         toast.show();
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                ExitDialog exitDialog = ExitDialog.newInstance();
+                exitDialog.show(getSupportFragmentManager(), "Exit Dialogue");
+        }
+        return true;
+    }
+    @Override
+    public void exit() {
+        finish();
     }
 
     private void writeFile(){

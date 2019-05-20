@@ -26,13 +26,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/montserrat"
-        android:text="Please Confirm"
+        android:text="Confirm transfer from Wallet to Card"
         android:textAlignment="center"
         android:textColor="#34495e"
-        android:textSize="30dp"
+        android:textSize="24dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,15 +44,16 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat"
-        android:text="Current money in X"
+        android:text="Current money in Wallet:"
         android:textAlignment="viewStart"
         android:textColor="#7f8c8d"
         android:textSize="20dp"
         android:typeface="monospace"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/typeText2" />
+
     <TextView
-        android:id="@+id/current"
+        android:id="@+id/currentWallet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -68,22 +68,22 @@
     <TextView
         android:id="@+id/ammountText9"
         android:layout_width="wrap_content"
-        android:layout_height="37dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat"
-        android:text="Amount registered:"
+        android:text="Current money in Card:"
         android:textAlignment="viewStart"
         android:textColor="#7f8c8d"
         android:textSize="20dp"
         android:typeface="monospace"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/current" />
+        app:layout_constraintTop_toBottomOf="@+id/currentWallet" />
 
     <TextView
-        android:id="@+id/registered"
+        android:id="@+id/currentCard"
         android:layout_width="wrap_content"
-        android:layout_height="37dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/montserrat"
         android:text="0.00€"
@@ -93,34 +93,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ammountText9" />
 
-    <View
-        android:id="@+id/divider14"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="24dp"
-        android:background="#bdc3c7"
-        app:layout_constraintTop_toBottomOf="@+id/registered"
-        tools:layout_editor_absoluteX="10dp" />
-
     <TextView
-        android:id="@+id/ammountText14"
+        android:id="@+id/transferAmount"
         android:layout_width="wrap_content"
-        android:layout_height="37dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/montserrat"
-        android:text="Money after transaction:"
-        android:textAlignment="viewStart"
-        android:textColor="#7f8c8d"
-        android:textSize="20dp"
-        android:typeface="monospace"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider14" />
-
-    <TextView
-        android:id="@+id/moneyAfter"
-        android:layout_width="wrap_content"
-        android:layout_height="37dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/montserrat"
         android:text="0.00€"
@@ -131,22 +107,61 @@
         app:layout_constraintTop_toBottomOf="@+id/ammountText14" />
 
     <TextView
-        android:id="@+id/ammountText3"
+        android:id="@+id/oof"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat"
-        android:text="Frequency:"
+        android:text="Amount in Wallet after tranfer:"
         android:textAlignment="viewStart"
         android:textColor="#7f8c8d"
         android:textSize="20dp"
         android:typeface="monospace"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moneyAfter" />
+        app:layout_constraintTop_toBottomOf="@+id/divider14" />
 
     <TextView
-        android:id="@+id/frequencyText"
+        android:id="@+id/ammountText4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Amount in Card after transfer:"
+        android:textAlignment="viewStart"
+        android:textColor="#7f8c8d"
+        android:textSize="20dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/afterWallet" />
+
+    <View
+        android:id="@+id/divider14"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="#bdc3c7"
+        app:layout_constraintTop_toBottomOf="@+id/transferAmount"
+        tools:layout_editor_absoluteX="10dp" />
+
+    <TextView
+        android:id="@+id/ammountText14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Amount to transfer:"
+        android:textAlignment="viewStart"
+        android:textColor="#7f8c8d"
+        android:textSize="20dp"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentCard" />
+
+    <TextView
+        android:id="@+id/afterWallet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -156,35 +171,52 @@
         android:textSize="32dp"
         android:typeface="monospace"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ammountText3" />
+        app:layout_constraintTop_toBottomOf="@+id/oof" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@+id/afterWallet"
+        app:layout_constraintTop_toBottomOf="@+id/oof"
+        app:srcCompat="@drawable/ic_up" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@+id/afterCard"
+        app:layout_constraintTop_toBottomOf="@+id/ammountText4"
+        app:srcCompat="@drawable/ic_up" />
 
     <TextView
-        android:id="@+id/moneyAlter"
-        android:layout_width="match_parent"
+        android:id="@+id/afterCard"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:fontFamily="@font/montserrat"
-        android:text="Current Money in X:"
+        android:text="0.00€"
         android:textAlignment="viewStart"
-        android:textColor="#7f8c8d"
-        android:textSize="18sp"
+        android:textSize="32dp"
         android:typeface="monospace"
-        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frequencyText" />
+        app:layout_constraintTop_toBottomOf="@+id/ammountText4" />
 
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:minWidth="350dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moneyAlter">
+        app:layout_constraintTop_toBottomOf="@+id/afterCard">
 
         <Button
             android:id="@+id/canc"

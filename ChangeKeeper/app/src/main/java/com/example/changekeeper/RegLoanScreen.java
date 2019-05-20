@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 
-public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, ConfirmDialogue.ConfirmDialogListener{
+public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnItemSelectedListener, ConfirmDialogue.ConfirmDialogListener, ExitDialog.ExitDialogListener {
 
     private static final String TAG = "RegLoan";
     private TextView mDisplayDate;
@@ -171,7 +172,6 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
             @Override
             public void afterTextChanged(Editable e) {
-                if(typeFlag == 0){
                     String s = e.toString();
                     if (s.length() > 0) {
                         if (!s.endsWith("€")) {
@@ -188,25 +188,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
                             }
                         }
                     }
-                }else{
-                    String s = e.toString();
-                    if (s.length() > 0) {
 
-                        if (!s.endsWith("€") && !s.startsWith("-")) {
-                            if (!s.equals("-" + s + "€")) {
-                                s = s.replaceAll("[^\\d.]", "");
-                                edt.setText("-" + s + "€");
-                            } else {
-                                edt.setSelection(s.length() - "€".length());
-                            }
-                        } else {
-                            edt.setSelection(s.length()  - "€".length());
-                            if (s.equals("-€")) {
-                                edt.setText("");
-                            }
-                        }
-                    }
-                }
 
             }
         });
@@ -282,19 +264,23 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
     private void callConfirm(){
         Bundle args = new Bundle();
-        args.putString("amount",((TextView)findViewById(R.id.regText)).getText().toString().replace("€",""));
+        String amount = "";
         switch(this.typeFlag){
             case 0:
-                args.putString("type","INCOME");
+                args.putString("type","BORROW");
+                amount = ((TextView)findViewById(R.id.regText)).getText().toString().replace("€","");
                 break;
 
             case 1:
-                args.putString("type","EXPENSE");
+                args.putString("type","LEND");
+                amount = "-" + ((TextView)findViewById(R.id.regText)).getText().toString().replace("€","");
                 break;
 
             default:
                 Log.v(TAG,"wtf erro :D");
         }
+        args.putString("amount",amount);
+
         switch(this.destination){
             case "WALLET":
                 args.putString("dest","WALLET");
@@ -307,6 +293,14 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
             default:
                 Log.v(TAG,"wtf erro :D");
         }
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        args.putString("regDate",day+"/"+month+"/"+year);
+        args.putString("payday",((TextView)findViewById(R.id.datePicker)).getText().toString());
 
         ConfirmDialogue confirmDialogue = new ConfirmDialogue();
         confirmDialogue.setArguments(args);
@@ -323,6 +317,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         EditText editText = (EditText) findViewById(R.id.regText);
 
         this.amount = Double.parseDouble(editText.getText().toString().replace("€",""));
+        Log.i(TAG,"oioi"+this.amount);
         this.date = ((TextView)findViewById(R.id.datePicker)).getText().toString();
         if(((TextView)findViewById(R.id.fromInput)).getText().toString().length() == 0)
             this.person = "Anonymous";
@@ -340,9 +335,12 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         //Register
         writeFile();
         Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        if(cal.get(Calendar.DAY_OF_MONTH) == Integer.parseInt(this.date.split("/")[0]) && (cal.get(Calendar.MONTH)+1) == Integer.parseInt(this.date.split("/")[1]) && cal.get(Calendar.YEAR) == Integer.parseInt(this.date.split("/")[2]))
-            updateWallet();
+        Log.i(TAG,"oioi" + this.date);
+        updateWallet();
 
         Toast toast = Toast.makeText(this,"Loan Registered Successfully", Toast.LENGTH_SHORT);
 
@@ -361,6 +359,7 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
             case 1:
                 fileName = "UserLends";
+                this.amount = this.amount*(-1);
                 break;
 
             default:
@@ -418,7 +417,19 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
             e.printStackTrace();
         }
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                ExitDialog exitDialog = ExitDialog.newInstance();
+                exitDialog.show(getSupportFragmentManager(), "Exit Dialogue");
+        }
+        return true;
+    }
+    @Override
+    public void exit() {
+        finish();
+    }
     private void updateWallet() {
         try {
             FileInputStream fileInputStream = openFileInput("UserMoney.txt");
@@ -429,17 +440,12 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
             Double walletAmount = Double.parseDouble(bufferedReader.readLine());
             Double cardAmount = Double.parseDouble(bufferedReader.readLine());
 
-            if(this.typeFlag == 0){
+
                 if(this.destination.equals("WALLET"))
                     walletAmount = walletAmount + this.amount;
                 else
                     cardAmount = cardAmount + this.amount;
-            }else{
-                if(this.destination.equals("WALLET"))
-                    walletAmount = walletAmount - this.amount;
-                else
-                    cardAmount = cardAmount - this.amount;
-            }
+
 
 
             FileOutputStream fileOutputStream = openFileOutput("UserMoney.txt", MODE_PRIVATE);

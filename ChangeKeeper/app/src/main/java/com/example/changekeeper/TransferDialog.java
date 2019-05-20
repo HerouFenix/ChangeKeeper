@@ -20,7 +20,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class TransferDialog extends AppCompatDialogFragment{
+import org.w3c.dom.Text;
+
+public class TransferDialog extends AppCompatDialogFragment implements ConfirmDialogue2.ConfirmDialogListener2 {
     //Class used to create a new category for incomes/expenses
     private TransferDialogListener listener;
 
@@ -90,7 +92,13 @@ public class TransferDialog extends AppCompatDialogFragment{
                     amount.replace("€","");
                     amount.replace("-","");
 
-                    listener.updateTransfer(amount);
+                    Bundle args = new Bundle();
+
+                    args.putString("sent", ((TextView)view.findViewById(R.id.textView2)).getText().toString());
+                    args.putString("amount",amount.replace("€",""));
+                    ConfirmDialogue2 confirmDialogue = new ConfirmDialogue2();
+                    confirmDialogue.setArguments(args);
+                    confirmDialogue.show(getActivity().getSupportFragmentManager(), "Confirm Dialogue2");
 
                     dismiss();
                 }
@@ -131,6 +139,11 @@ public class TransferDialog extends AppCompatDialogFragment{
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
+
+    }
+
+    @Override
+    public void confirm(String a) {
 
     }
 

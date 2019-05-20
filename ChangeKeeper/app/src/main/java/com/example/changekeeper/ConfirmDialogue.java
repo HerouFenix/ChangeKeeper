@@ -70,6 +70,26 @@ public class ConfirmDialogue extends AppCompatDialogFragment{
                 break;
         }
 
+        switch(args.getString("type")){
+            case "EXPENSE":
+                if(!args.getString("frequency").split(" ")[0].equals("Every") && !args.getString("frequency").equals("Does not repeat"))
+                    ((TextView)view.findViewById(R.id.frequencyText)).setText("Every " + args.getString("frequency"));
+                else
+                    ((TextView)view.findViewById(R.id.frequencyText)).setText(args.getString("frequency"));
+
+                break;
+            case "INCOME":
+                if(!args.getString("frequency").split(" ")[0].equals("Every") && !args.getString("frequency").equals("Does not repeat"))
+                    ((TextView)view.findViewById(R.id.frequencyText)).setText("Every " + args.getString("frequency"));
+                else
+                    ((TextView)view.findViewById(R.id.frequencyText)).setText(args.getString("frequency"));
+                break;
+            default:
+                ((TextView)view.findViewById(R.id.ammountText3)).setText("Payday:");
+                ((TextView)view.findViewById(R.id.frequencyText)).setText(args.getString("payday"));
+                break;
+
+        }
         this.amount = args.getString("amount");
         Log.i(":(","fds wtfcrl " + this.amount);
 
@@ -91,17 +111,9 @@ public class ConfirmDialogue extends AppCompatDialogFragment{
             ((TextView)view.findViewById(R.id.current)).setTextColor(Color.parseColor("#e74c3c"));
 
         double finalAmount = 0;
-        switch(args.getString("type")){
-            case "EXPENSE":
-                finalAmount = Double.parseDouble(this.current) - Double.parseDouble(this.amount);
+        finalAmount = Double.parseDouble(this.current) + Double.parseDouble(this.amount);
 
-                break;
-            case "INCOME":
-                finalAmount = Double.parseDouble(this.current) + Double.parseDouble(this.amount);
-                this.current = this.cardAmount;
-                break;
-        }
-
+        Log.i("hm","FDSOI" + finalAmount);
         ((TextView)view.findViewById(R.id.moneyAfter)).setText(finalAmount + "€");
 
         if(finalAmount>0)
@@ -112,12 +124,17 @@ public class ConfirmDialogue extends AppCompatDialogFragment{
         try{
             String date = args.getString("regDate");
             Calendar cal = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            cal2.set(Calendar.YEAR,Integer.parseInt(date.split("/")[2]));
+            cal2.set(Calendar.MONTH,Integer.parseInt(date.split("/")[1])-1);
+            cal2.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date.split("/")[0]));
+
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH) + 1;
             int day = cal.get(Calendar.DAY_OF_MONTH);
             String currentDate = day+"/"+month+"/"+year;
 
-            if(!date.equals(currentDate)){
+            if(!date.equals(currentDate) && cal2.after(cal)){
                 TextView warning = view.findViewById(R.id.moneyAlter);
                 warning.setText("*Transaction will only occur in " + date);
                 warning.setVisibility(View.VISIBLE);
