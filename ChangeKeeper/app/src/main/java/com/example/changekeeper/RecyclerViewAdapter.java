@@ -143,7 +143,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 case "Debt payment":
                     viewHolder.type.setText("Debt Payment");
-                    viewHolder.image.setImageResource(R.drawable.ic_lend);
+                    viewHolder.image.setImageResource(R.drawable.ic_expense);
                     break;
 
                 default:

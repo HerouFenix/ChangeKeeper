@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class AllowanceMoreInfoScreen extends AppCompatActivity{
+public class AllowanceMoreInfoScreen extends AppCompatActivity implements DeleteDialog.DeleteDialogListener {
 
     private static final String TAG = "AllowanceInfo";
 
@@ -112,14 +112,11 @@ public class AllowanceMoreInfoScreen extends AppCompatActivity{
         return null;
     }
 
+
+
     public void deleteThis(View view) throws IOException {
-        updateFile(readFile());
-
-        Intent intent = new Intent(this, AllowanceScreen.class);
-
-        Toast toast = Toast.makeText(this,"Income deleted successfully!", Toast.LENGTH_LONG);
-        toast.show();
-        startActivity(intent);
+        DeleteDialog deleteDialog = DeleteDialog.newInstance();
+        deleteDialog.show(getSupportFragmentManager(), "Delete Dialogue");
     }
 
     private void updateFile(ArrayList<String> newList) throws IOException {
@@ -181,5 +178,20 @@ public class AllowanceMoreInfoScreen extends AppCompatActivity{
         String date = day+"/"+month+"/"+year;
 
         return date;
+    }
+
+    @Override
+    public void confirm() {
+        try {
+            updateFile(readFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Intent intent = new Intent(this, AllowanceScreen.class);
+
+        Toast toast = Toast.makeText(this,"Income deleted successfully!", Toast.LENGTH_LONG);
+        toast.show();
+        startActivity(intent);
     }
 }

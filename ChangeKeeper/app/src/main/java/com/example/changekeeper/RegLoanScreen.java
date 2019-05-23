@@ -217,7 +217,6 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
         else
             ((ImageView)findViewById(R.id.imageView)).setImageResource(R.drawable.ic_cardback);
 
-
     }
 
     @Override
@@ -326,9 +325,9 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
         if(((TextView)findViewById(R.id.editDescription)).getText().toString().length() == 0)
             if(this.typeFlag == 1)
-                this.description = "Lent money";
+                this.description = "Lent money to " + this.person;
             else
-                this.description = "Borrowed money";
+                this.description = "Borrowed money from " + this.person;
         else
             this.description = ((TextView)findViewById(R.id.editDescription)).getText().toString();
 

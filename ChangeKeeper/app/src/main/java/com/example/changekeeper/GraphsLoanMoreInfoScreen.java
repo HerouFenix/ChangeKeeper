@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
+public class GraphsLoanMoreInfoScreen extends AppCompatActivity implements DeleteDialog.DeleteDialogListener, ConfirmLoanDialog.ConfirmLoanDialogListener {
 
     private static final String TAG = "Loans";
 
@@ -179,7 +180,7 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
                                 line.split(" - ")[5] + " - " +
                                 line.split(" - ")[6] + " - " +
                                 line.split(" - ")[7] + " - " +
-                                line.split(" - ")[8] + " - " +
+                                "[PAID] " + line.split(" - ")[8] + " - " +
                                 line.split(" - ")[9] + " - " +
                                 "PAID";
 
@@ -218,7 +219,7 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
                                 line.split(" - ")[5] + " - " +
                                 line.split(" - ")[6] + " - " +
                                 line.split(" - ")[7] + " - " +
-                                line.split(" - ")[8] + " - " +
+                                "[PAID] " + line.split(" - ")[8] + " - " +
                                 day+"/"+month+"/"+year + " - " +
                                 "PAID";
 
@@ -242,7 +243,17 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
     }
 
     public void deleteThis(View view) throws IOException {
-        updateFile(readFile());
+        DeleteDialog deleteDialog = DeleteDialog.newInstance();
+        deleteDialog.show(getSupportFragmentManager(), "Delete Dialogue");
+    }
+
+    @Override
+    public void confirm() {
+        try {
+            updateFile(readFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Intent intent = new Intent(this, GraphsScreen.class);
 
@@ -253,25 +264,30 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
         startActivity(intent);
     }
 
-    public void payThis(View view) throws IOException{
-        updateWallet();
-        updateFile(readFile2());
-        Intent intent = new Intent(this, MainActivity.class);
 
-        String message;
-        if (this.details[1].contains("-")) {
-            message = this.details[3] + " paid their debt successfully!";
-            registerIncome();
-        }else {
-            message = "You paid your debt to " + this.details[3] + " successfully!";
-            registerExpense();
+
+
+    public void payThis(View view) throws IOException {
+        Bundle args = new Bundle();
+        if (details[1].contains("-")) {
+            args.putString("type", "lend");
+            args.putString("amount", ((TextView) findViewById(R.id.amountText)).getText().toString().replace("€", "").replace("-",""));
+
+        } else {
+            args.putString("type", "borrow");
+            args.putString("amount", "-"+((TextView) findViewById(R.id.amountText)).getText().toString().replace("€", ""));
+
         }
-        Toast toast = Toast.makeText(this,message, Toast.LENGTH_LONG);
-        toast.show();
-        startActivity(intent);
+        args.putString("person", ((TextView) findViewById(R.id.person)).getText().toString());
+
+
+        ConfirmLoanDialog confirmDialogue = ConfirmLoanDialog.newInstance();
+        confirmDialogue.setArguments(args);
+
+        confirmDialogue.show(getSupportFragmentManager(), "Confirm Dialogue");
     }
 
-    private void registerIncome() throws IOException {
+    private void registerIncome(String dest) throws IOException {
         boolean found = false;
         for(String i : fileList()){
             Log.v(TAG,i+" ------------------------");
@@ -292,7 +308,7 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
             String type;
 
 
-            if(this.details[0].equals("WALLET")){
+            if(dest.equals("WALLET")){
                 type = "WALLET";
             }else{
                 type = "CARD";
@@ -334,7 +350,7 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
     }
 
 
-    private void registerExpense(){
+    private void registerExpense(String dest){
         boolean found = false;
         for(String i : fileList()){
             Log.v(TAG,i+" ------------------------");
@@ -352,7 +368,7 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
             }
             String type;
 
-            if(this.details[0].equals("WALLET")){
+            if(dest.equals("WALLET")){
                 type = "WALLET";
             }else{
                 type = "CARD";
@@ -409,7 +425,7 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
 
     }
 
-    private void updateWallet() {
+    private void updateWallet(String dest) {
         try {
             FileInputStream fileInputStream = openFileInput("UserMoney.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
@@ -419,17 +435,13 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
             Double walletAmount = Double.parseDouble(bufferedReader.readLine());
             Double cardAmount = Double.parseDouble(bufferedReader.readLine());
 
-            if (!this.details[1].contains("-")) {
-                if(this.details[0].equals("WALLET"))
-                    walletAmount = walletAmount - Double.parseDouble(this.details[1].replace("-",""));
-                else
-                    cardAmount = cardAmount - Double.parseDouble(this.details[1].replace("-",""));
-            }else{
-                if(this.details[0].equals("WALLET"))
-                    walletAmount = walletAmount + Double.parseDouble(this.details[1]);
-                else
-                    cardAmount = cardAmount + Double.parseDouble(this.details[1]);
-            }
+            Log.i("FDS DUDE CRL", "L " + this.details[1]);
+
+            if(dest.equals("WALLET"))
+                walletAmount = walletAmount - Double.parseDouble(this.details[1]);
+            else
+                cardAmount = cardAmount - Double.parseDouble(this.details[1]);
+
 
 
             FileOutputStream fileOutputStream = openFileOutput("UserMoney.txt", MODE_PRIVATE);
@@ -444,5 +456,32 @@ public class GraphsLoanMoreInfoScreen extends AppCompatActivity{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void pay(String dest) {
+        updateWallet(dest);
+        try {
+            updateFile(readFile2());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+
+        String message;
+        if (this.details[1].contains("-")) {
+            message = this.details[3] + " paid their debt successfully!";
+            try {
+                registerIncome(dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            message = "You paid your debt to " + this.details[3] + " successfully!";
+            registerExpense(dest);
+        }
+        Toast toast = Toast.makeText(this,message, Toast.LENGTH_LONG);
+        toast.show();
+        startActivity(intent);
     }
 }

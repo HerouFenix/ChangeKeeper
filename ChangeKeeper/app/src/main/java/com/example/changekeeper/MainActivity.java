@@ -389,56 +389,71 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
 
             //Format: WALLET/CARD - Amount - Date - Person(NULL UNLESS LOAN) - Category (NULL UNLESS EXPENSE)- FrequencyType (NULL IF LOAN) - Frequency (NULL IF LOAN) - Weekdays (NULL IF LOAN) - Description
             while((line = bufferedReader.readLine()) != null){
-                if(!line.split(" - ")[10].equals("PAID")){
+                Log.i("FADFASKD", "SDOF" + line);
+
+                if(!line.split(" - ")[9].equals("NULL")) { //Check if theres a pay date
+
                     Calendar cal = Calendar.getInstance();
                     int year = cal.get(Calendar.YEAR);
                     int month = cal.get(Calendar.MONTH) + 1;
                     int day = cal.get(Calendar.DAY_OF_MONTH);
-                    String currentDate = day+"/"+month+"/"+year;
+                    String currentDate = day + "/" + month + "/" + year;
 
                     String[] temp = line.split(" - ");
+
 
                     Calendar cal2 = Calendar.getInstance();
-                    cal.set(Calendar.YEAR,Integer.parseInt(temp[2].split("/")[2]));
-                    cal.set(Calendar.MONTH,Integer.parseInt(temp[2].split("/")[1])-1);
-                    cal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(temp[2].split("/")[0]));
+                    cal2.set(Calendar.YEAR, Integer.parseInt(temp[9].split("/")[2]));
+                    cal2.set(Calendar.MONTH, Integer.parseInt(temp[9].split("/")[1]) - 1);
+                    cal2.set(Calendar.DAY_OF_MONTH, Integer.parseInt(temp[9].split("/")[0]));
+                    int year2 = cal.get(Calendar.YEAR);
+                    int month2 = cal.get(Calendar.MONTH) + 1;
+                    int day2 = cal.get(Calendar.DAY_OF_MONTH);
+                    String nextDate = day2 + "/" + month2 + "/" + year2;
 
-                    if(cal.after(cal2)){
-                        Log.i(TAG,"oioi" + line);
-                        updateAmounts(temp[1],temp[0]);
-                        temp[10] = "PAID";
-                        line = temp[0] + " - " +
-                                temp[1] + " - " +
-                                temp[2] + " - " +
-                                temp[3] + " - " +
-                                temp[4] + " - " +
-                                temp[5] + " - " +
-                                temp[6] + " - " +
-                                temp[7] + " - " +
-                                temp[8] + " - " +
-                                temp[9] + " - " +
-                                temp[10];
-                        test = true;
+                    Log.i("o","ohm" + nextDate);
+                    if (!file.equals("UserBorrows") && !file.equals("UserLends")) { //For Incomes/Expenses
+                        if(cal.after(cal2)){
+                            Log.i(TAG,"oioi" + line);
+                            updateAmounts(temp[1],temp[0]);
+
+                            temp[10] = "PAID";
+                            line = temp[0] + " - " +
+                                    temp[1] + " - " +
+                                    temp[2] + " - " +
+                                    temp[3] + " - " +
+                                    temp[4] + " - " +
+                                    temp[5] + " - " +
+                                    temp[6] + " - " +
+                                    temp[7] + " - " +
+                                    temp[8] + " - " +
+                                    calcNextDate(temp[9],temp[6],temp[5]) + " - " +
+                                    temp[10];
+                            test = true;
+                        }
+                    }else{
+                        if(!temp[10].equals("NULL") && (cal.after(cal2) || cal.toString().equals(cal2.toString()))){
+                            Log.i(TAG,"oioi" + line);
+                            updateAmounts(temp[1],temp[0]);
+
+                            temp[10] = "PAID";
+                            line =  temp[0] + " - " +
+                                    temp[1] + " - " +
+                                    temp[2] + " - " +
+                                    temp[3] + " - " +
+                                    temp[4] + " - " +
+                                    temp[5] + " - " +
+                                    temp[6] + " - " +
+                                    temp[7] + " - " +
+                                    "[PAID] "+ temp[8] + " - " +
+                                    temp[9] + " - " +
+                                    temp[10];
+                            test = true;
+                        }
                     }
-                }
-                else if(!line.split(" - ")[9].equals("NULL")){
-                    String[] temp = line.split(" - ");
-                    temp[9] = calcNextDate(temp[2],temp[6],temp[5]);
 
-                    updateAmounts(temp[1],temp[0]);
-                    line = temp[0] + " - " +
-                            temp[1] + " - " +
-                            temp[2] + " - " +
-                            temp[3] + " - " +
-                            temp[4] + " - " +
-                            temp[5] + " - " +
-                            temp[6] + " - " +
-                            temp[7] + " - " +
-                            temp[8] + " - " +
-                            temp[9] + " - " +
-                            temp[10];
 
-                    test = true;
+                    Log.i("Of", "ansf " + line);
                 }
                 all.add(line);
                 /*for (String i : this.all)
@@ -473,28 +488,28 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
             case "Day":
                 do {
                     if(cal.equals(current))
-                        break;
+                        continue;
                     cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(frequency));
                 }while(current.after(cal));
                 break;
             case "Week":
                 do {
                     if(cal.equals(current))
-                        break;
+                        continue;
                     cal.add(Calendar.WEEK_OF_MONTH, Integer.parseInt(frequency));
                 }while(current.after(cal));
                 break;
             case "Month":
                 do {
                     if(cal.equals(current))
-                        break;
+                        continue;
                     cal.add(Calendar.MONTH, Integer.parseInt(frequency));
                 }while(current.after(cal));
                 break;
             case "Year":
                 do {
                     if(cal.equals(current))
-                        break;
+                        continue;
                     cal.add(Calendar.YEAR, Integer.parseInt(frequency));
                 }while(current.after(cal));
                 break;

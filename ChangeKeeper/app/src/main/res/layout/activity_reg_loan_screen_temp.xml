@@ -222,7 +222,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="25dp"
                 android:fontFamily="@font/montserrat"
-                android:text="Destination"
+                android:text="Fund"
                 android:textAlignment="center"
                 android:textColor="#7f8c8d"
                 android:textSize="24sp" />

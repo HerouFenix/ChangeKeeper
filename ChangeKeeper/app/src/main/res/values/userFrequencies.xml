@@ -13,4 +13,9 @@
         <item>Month</item>
         <item>Year</item>
     </string-array>
+
+    <string-array name="types">
+        <item>WALLET</item>
+        <item>CARD</item>
+    </string-array>
 </resources>

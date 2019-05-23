@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class LoansLoanMoreInfoScreen extends AppCompatActivity{
+public class LoansLoanMoreInfoScreen extends AppCompatActivity implements DeleteDialog.DeleteDialogListener, ConfirmLoanDialog.ConfirmLoanDialogListener {
 
     private static final String TAG = "Loans";
 
@@ -169,7 +169,7 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
                 String line;
                 boolean found = false;
 
-                //Format: WALLET/CARD - Amount - Date - Person(NULL UNLESS LOAN) - Category (NULL UNLESS EXPENSE)- FrequencyType (NULL IF LOAN) - Frequency (NULL IF LOAN) - Weekdays (NULL IF LOAN) - Description
+                //Format: ID - WALLET/CARD - Amount - Person - Date - Description
                 while ((line = bufferedReader.readLine()) != null) {
                     if(!found && line.equals(this.info)){
                         found = true;
@@ -181,7 +181,7 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
                                 line.split(" - ")[5] + " - " +
                                 line.split(" - ")[6] + " - " +
                                 line.split(" - ")[7] + " - " +
-                                line.split(" - ")[8] + " - " +
+                                "[PAID] " + line.split(" - ")[8] + " - " +
                                 line.split(" - ")[9] + " - " +
                                 "PAID";
 
@@ -212,15 +212,15 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
                         int year = cal.get(Calendar.YEAR);
                         int month = cal.get(Calendar.MONTH) + 1;
                         int day = cal.get(Calendar.DAY_OF_MONTH);
-                        line = line.split(" - ")[0] + " - " +
-                                line.split(" - ")[1] + " - " +
+                        line =  line.split(" - ")[0] + " - " +
+                                line.split(" - ")[1] + " - " +  //Make the value negative
                                 line.split(" - ")[2] + " - " +
                                 line.split(" - ")[3] + " - " +
                                 line.split(" - ")[4] + " - " +
                                 line.split(" - ")[5] + " - " +
                                 line.split(" - ")[6] + " - " +
                                 line.split(" - ")[7] + " - " +
-                                line.split(" - ")[8] + " - " +
+                                "[PAID] " + line.split(" - ")[8] + " - " +
                                 day+"/"+month+"/"+year + " - " +
                                 "PAID";
 
@@ -244,7 +244,18 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
     }
 
     public void deleteThis(View view) throws IOException {
-        updateFile(readFile());
+        DeleteDialog deleteDialog = DeleteDialog.newInstance();
+        deleteDialog.show(getSupportFragmentManager(), "Delete Dialogue");
+    }
+
+
+    @Override
+    public void confirm() {
+        try {
+            updateFile(readFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Intent intent = new Intent(this, LoanScreen.class);
 
@@ -255,25 +266,27 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
         startActivity(intent);
     }
 
-    public void payThis(View view) throws IOException{
-        updateWallet();
-        updateFile(readFile2());
-        Intent intent = new Intent(this, MainActivity.class);
+    public void payThis(View view) throws IOException {
+        Bundle args = new Bundle();
+        if (details[1].contains("-")) {
+            args.putString("type", "lend");
+            args.putString("amount", ((TextView) findViewById(R.id.amountText)).getText().toString().replace("€", "").replace("-",""));
 
-        String message;
-        if (this.details[1].contains("-")) {
-            message = this.details[3] + " paid their debt successfully!";
-            registerIncome();
-        }else {
-            message = "You paid your debt to " + this.details[3] + " successfully!";
-            registerExpense();
+        } else {
+            args.putString("type", "borrow");
+            args.putString("amount", "-"+((TextView) findViewById(R.id.amountText)).getText().toString().replace("€", ""));
+
         }
-        Toast toast = Toast.makeText(this,message, Toast.LENGTH_LONG);
-        toast.show();
-        startActivity(intent);
+        args.putString("person", ((TextView) findViewById(R.id.person)).getText().toString());
+
+
+        ConfirmLoanDialog confirmDialogue = ConfirmLoanDialog.newInstance();
+        confirmDialogue.setArguments(args);
+
+        confirmDialogue.show(getSupportFragmentManager(), "Confirm Dialogue");
     }
 
-    private void registerIncome() throws IOException {
+    private void registerIncome(String dest) throws IOException {
         boolean found = false;
         for(String i : fileList()){
             Log.v(TAG,i+" ------------------------");
@@ -336,7 +349,7 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
     }
 
 
-    private void registerExpense(){
+    private void registerExpense(String dest){
         boolean found = false;
         for(String i : fileList()){
             Log.v(TAG,i+" ------------------------");
@@ -411,7 +424,7 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
 
     }
 
-    private void updateWallet() {
+    private void updateWallet(String dest) {
         try {
             FileInputStream fileInputStream = openFileInput("UserMoney.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
@@ -421,17 +434,11 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
             Double walletAmount = Double.parseDouble(bufferedReader.readLine());
             Double cardAmount = Double.parseDouble(bufferedReader.readLine());
 
-            if (!this.details[1].contains("-")) {
-                if(this.details[0].equals("WALLET"))
-                    walletAmount = walletAmount - Double.parseDouble(this.details[1].replace("-",""));
-                else
-                    cardAmount = cardAmount - Double.parseDouble(this.details[1].replace("-",""));
-            }else{
-                if(this.details[0].equals("WALLET"))
-                    walletAmount = walletAmount + Double.parseDouble(this.details[1]);
-                else
-                    cardAmount = cardAmount + Double.parseDouble(this.details[1]);
-            }
+            if(dest.equals("WALLET"))
+                walletAmount = walletAmount - Double.parseDouble(this.details[1]);
+            else
+                cardAmount = cardAmount - Double.parseDouble(this.details[1]);
+
 
 
             FileOutputStream fileOutputStream = openFileOutput("UserMoney.txt", MODE_PRIVATE);
@@ -446,5 +453,32 @@ public class LoansLoanMoreInfoScreen extends AppCompatActivity{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void pay(String dest) {
+        updateWallet(dest);
+        try {
+            updateFile(readFile2());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+
+        String message;
+        if (this.details[1].contains("-")) {
+            message = this.details[3] + " paid their debt successfully!";
+            try {
+                registerIncome(dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            message = "You paid your debt to " + this.details[3] + " successfully!";
+            registerExpense(dest);
+        }
+        Toast toast = Toast.makeText(this,message, Toast.LENGTH_LONG);
+        toast.show();
+        startActivity(intent);
     }
 }

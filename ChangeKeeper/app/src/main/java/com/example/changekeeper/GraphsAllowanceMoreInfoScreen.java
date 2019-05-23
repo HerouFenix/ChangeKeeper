@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class GraphsAllowanceMoreInfoScreen extends AppCompatActivity{
+public class GraphsAllowanceMoreInfoScreen extends AppCompatActivity implements DeleteDialog.DeleteDialogListener {
 
     private static final String TAG = "AllowanceInfo";
 
@@ -113,7 +113,17 @@ public class GraphsAllowanceMoreInfoScreen extends AppCompatActivity{
     }
 
     public void deleteThis(View view) throws IOException {
-        updateFile(readFile());
+        DeleteDialog deleteDialog = DeleteDialog.newInstance();
+        deleteDialog.show(getSupportFragmentManager(), "Delete Dialogue");
+    }
+
+    @Override
+    public void confirm() {
+        try {
+            updateFile(readFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Intent intent = new Intent(this, GraphsScreen.class);
 
