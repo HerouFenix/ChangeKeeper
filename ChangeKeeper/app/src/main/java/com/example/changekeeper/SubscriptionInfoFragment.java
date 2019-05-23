@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +36,7 @@ public class SubscriptionInfoFragment extends Fragment {
         if(this.incomes!=null && this.incomes.size()!=0){
             LinearLayout ll;
             ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
-            ll.removeAllViewsInLayout();
+            ll.setVisibility(View.GONE);
         }else{
             TextView text = (TextView) thisView.findViewById(R.id.noAllowance1);
             text.setText("You don't have any subscriptions");
@@ -42,7 +44,18 @@ public class SubscriptionInfoFragment extends Fragment {
             text.setText("^_^");
         }
 
+        sortInfoByDate();
+
         drawTable();
+
+        ImageButton search = (ImageButton) thisView.findViewById(R.id.searchButton);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchDialog2 searchDialog = SearchDialog2.newInstance();
+                searchDialog.show(getActivity().getSupportFragmentManager(), "Search Dialogue");
+            }
+        });
 
         return thisView;
     }
@@ -85,6 +98,146 @@ public class SubscriptionInfoFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
+
+
+    private boolean compareDate(String date1, String date2){
+        Calendar cal1 = Calendar.getInstance();
+        cal1.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date1.split("/")[0]));
+        cal1.set(Calendar.MONTH,Integer.parseInt(date1.split("/")[1])-1);
+        cal1.set(Calendar.YEAR,Integer.parseInt(date1.split("/")[2]));
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date2.split("/")[0]));
+        cal2.set(Calendar.MONTH,Integer.parseInt(date2.split("/")[1])-1);
+        cal2.set(Calendar.YEAR,Integer.parseInt(date2.split("/")[2]));
+
+        return cal1.after(cal2); //True if cal 1 is sooner than cal2
+    }
+
+    private void sortInfoByDate(){
+        for (int i = 1; i < this.incomes.size(); i++) {
+            String key = this.incomes.get(i);
+            int j = i - 1;
+            while (j >= 0 && compareDate(this.incomes.get(j).split(" - ")[2],key.split(" - ")[2])) {
+                int k = j+1;
+                this.incomes.set(k,this.incomes.get(j));
+                j = j - 1;
+            }
+            int k = j + 1;
+            this.incomes.set(k,key);
+        }
+    }
+
+
+    public void search(String date, String desc) {
+        Log.i("Oi","boi");
+        this.incomes.clear();
+
+        if(this.incomes.size() == 0){
+            return;
+        }
+        loadIncomes();
+
+        if(!date.equals("NULL")){
+
+            Log.i("boi","boi" + date);
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            String current = day + "/" + month + "/" + year;
+            switch (date){
+                case "TODAY":
+                    for(int i = 0 ; i < this.incomes.size() ; i++){
+                        String line = this.incomes.get(i);
+                        Log.i("hm","boi" + line.split(" - ")[2]);
+                        if(line.split(" - ")[2].equals(current))
+                            continue;
+                        else{
+                            this.incomes.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+                case "YEAR":
+                    for(int i = 0 ; i < this.incomes.size() ; i++){
+                        String line = this.incomes.get(i);
+                        Log.i("hm","boi" + line.split(" - ")[2].split("/")[2]);
+                        Log.i("hm","boiiob" + year);
+                        String thisYear = line.split(" - ")[2].split("/")[2];
+                        if(thisYear.equals(year+"")){
+                            Log.i("hm","hi" + year);
+                            continue;
+                        }
+                        else{
+                            this.incomes.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+                case "MONTH":
+                    for(int i = 0 ; i < this.incomes.size() ; i++){
+                        String line = this.incomes.get(i);
+                        Log.i("hm","boi" + line.split(" - ")[2]);
+                        Log.i("hm","boiiob" + month);
+
+                        if(line.split(" - ")[2].split("/")[1].equals(month+""))
+                            continue;
+                        else{
+                            this.incomes.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+                default:
+                    for(int i = 0 ; i < this.incomes.size() ; i++){
+                        String line = this.incomes.get(i);
+                        if(line.split(" - ")[2].equals(date))
+                            continue;
+                        else{
+                            this.incomes.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+            }
+        }
+
+
+        if(!desc.equals("")){
+            for(int i = 0 ; i < this.incomes.size() ; i++){
+                String line = this.incomes.get(i);
+                if(line.split(" - ")[8].equals(desc))
+                    continue;
+                else {
+                    this.incomes.remove(line);
+                    i = i - 1;
+                }
+            }
+        }
+
+        if(this.incomes!=null && this.incomes.size()!=0){
+            LinearLayout ll;
+            ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
+            ll.setVisibility(View.GONE);
+        }else{
+            LinearLayout ll;
+            ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
+            ll.setVisibility(View.VISIBLE);
+            TextView text = (TextView) thisView.findViewById(R.id.noAllowance1);
+            text.setText("No registry were found with those parameters");
+            text = (TextView) thisView.findViewById(R.id.noAllowance2);
+            text.setText(":/");
+        }
+
+        sortInfoByDate();
+        drawTable();
+    }
+
 
 
 }

@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class AllowanceScreen extends AppCompatActivity {
+public class AllowanceScreen extends AppCompatActivity implements SearchDialog2.SearchDialogListener2 {
     private static final String TAG = "AllowanceScreen";
 
 
@@ -62,6 +62,17 @@ public class AllowanceScreen extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    @Override
+    public void search(String date, String desc) {
+        AllowanceInfoFragment fragment = (AllowanceInfoFragment) getSupportFragmentManager().findFragmentById(R.id.info);
+        fragment.search(date,desc);
+    }
+
+    @Override
+    public void noUpdate() {
+
     }
 
 

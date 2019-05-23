@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class SubscriptionScreen extends AppCompatActivity {
+public class SubscriptionScreen extends AppCompatActivity implements SearchDialog2.SearchDialogListener2 {
     private static final String TAG = "AllowanceScreen";
 
 
@@ -64,4 +64,14 @@ public class SubscriptionScreen extends AppCompatActivity {
     }
 
 
+    @Override
+    public void search(String date, String desc) {
+        SubscriptionInfoFragment fragment = (SubscriptionInfoFragment) getSupportFragmentManager().findFragmentById(R.id.info);
+        fragment.search(date,desc);
+    }
+
+    @Override
+    public void noUpdate() {
+
+    }
 }

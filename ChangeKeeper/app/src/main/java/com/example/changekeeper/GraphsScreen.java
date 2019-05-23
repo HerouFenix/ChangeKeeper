@@ -95,7 +95,8 @@ public class GraphsScreen extends AppCompatActivity  implements  SearchDialog.Se
 
     @Override
     public void search(String from, String to, String desc) {
-
+        AllInfoFragment fragment = (AllInfoFragment) ((ScreenSlidePagerAdapter)pageAdapter).getItem(0);
+        fragment.search(from,to,desc);
     }
 
     @Override

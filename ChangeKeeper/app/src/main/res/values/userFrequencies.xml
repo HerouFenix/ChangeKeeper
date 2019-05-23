@@ -18,4 +18,20 @@
         <item>WALLET</item>
         <item>CARD</item>
     </string-array>
+
+    <string-array name="types2">
+        <item>Any</item>
+        <item>Income</item>
+        <item>Expense</item>
+        <item>Loan</item>
+    </string-array>
+
+    <string-array name="dates">
+        <item>Any</item>
+        <item>Today</item>
+        <item>This month</item>
+        <item>This year</item>
+        <item>Specific date...</item>
+
+    </string-array>
 </resources>

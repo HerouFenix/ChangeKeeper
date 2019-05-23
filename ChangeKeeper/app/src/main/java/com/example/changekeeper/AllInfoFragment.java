@@ -20,12 +20,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class AllInfoFragment extends Fragment {
+public class AllInfoFragment extends Fragment{
 
     ViewGroup thisView;
 
@@ -44,8 +45,11 @@ public class AllInfoFragment extends Fragment {
         if(this.all!=null && this.all.size()!=0){
             LinearLayout ll;
             ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
-            ll.removeAllViewsInLayout();
+            ll.setVisibility(View.GONE);
         }else{
+            LinearLayout ll;
+            ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
+            ll.setVisibility(View.VISIBLE);
             TextView text = (TextView) thisView.findViewById(R.id.noAllowance1);
             text.setText("You haven't registered any transactions");
             text = (TextView) thisView.findViewById(R.id.noAllowance2);
@@ -210,5 +214,149 @@ public class AllInfoFragment extends Fragment {
         }
     }
 
+
+    public void search(String date, String type, String desc) {
+        Log.i("Oi","boi");
+        if(this.all.size() == 0){
+            return;
+        }
+        this.all.clear();
+        loadIncomes();
+        loadExpenses();
+        loadLoans();
+
+        if(!date.equals("NULL")){
+
+            Log.i("boi","boi" + date);
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            String current = day + "/" + month + "/" + year;
+            switch (date){
+                case "TODAY":
+                    for(int i = 0 ; i < this.all.size() ; i++){
+                        String line = this.all.get(i);
+                        Log.i("hm","boi" + line.split(" - ")[2]);
+                        if(line.split(" - ")[2].equals(current))
+                            continue;
+                        else{
+                            this.all.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+                case "YEAR":
+                    for(int i = 0 ; i < this.all.size() ; i++){
+                        String line = this.all.get(i);
+                        Log.i("hm","boi" + line.split(" - ")[2].split("/")[2]);
+                        Log.i("hm","boiiob" + year);
+                        String thisYear = line.split(" - ")[2].split("/")[2];
+                        if(thisYear.equals(year+"")){
+                            Log.i("hm","hi" + year);
+                            continue;
+                        }
+                        else{
+                            this.all.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+                case "MONTH":
+                    for(int i = 0 ; i < this.all.size() ; i++){
+                        String line = this.all.get(i);
+                        Log.i("hm","boi" + line.split(" - ")[2]);
+                        Log.i("hm","boiiob" + month);
+
+                        if(line.split(" - ")[2].split("/")[1].equals(month+""))
+                            continue;
+                        else{
+                            this.all.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+                default:
+                    for(int i = 0 ; i < this.all.size() ; i++){
+                        String line = this.all.get(i);
+                        if(line.split(" - ")[2].equals(date))
+                            continue;
+                        else{
+                            this.all.remove(line);
+                            i = i-1;
+                        }
+                    }
+                    break;
+
+            }
+        }
+
+        if(!type.equals("NULL")){
+            if(type.equals("INCOME")){
+                for(int i = 0 ; i < this.all.size() ; i++){
+                    String line = this.all.get(i);
+                    if(line.split(" - ")[4].equals("NULL") && line.split(" - ")[3].equals("NULL")){
+                        continue;
+                    }else{
+                        this.all.remove(line);
+                        i = i-1;
+                    }
+                }
+
+            }else if(type.equals("EXPENSE")){
+                for(int i = 0 ; i < this.all.size() ; i++){
+                    String line = this.all.get(i);
+                        if(!line.split(" - ")[4].equals("NULL"))
+                            continue;
+                        else{
+                            this.all.remove(line);
+                            i = i-1;
+                        }
+                    }
+            }else{
+                for(int i = 0 ; i < this.all.size() ; i++){
+                    String line = this.all.get(i);
+                    if(line.split(" - ")[4].equals("NULL") && !line.split(" - ")[3].equals("NULL"))
+                        continue;
+                    else{
+                        this.all.remove(line);
+                        i = i-1;
+                    }
+                }
+            }
+        }
+
+        if(!desc.equals("")){
+            for(int i = 0 ; i < this.all.size() ; i++){
+                String line = this.all.get(i);
+                if(line.split(" - ")[8].equals(desc))
+                    continue;
+                else {
+                    this.all.remove(line);
+                    i = i - 1;
+                }
+            }
+        }
+
+        if(this.all!=null && this.all.size()!=0){
+            LinearLayout ll;
+            ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
+            ll.setVisibility(View.GONE);
+        }else{
+            LinearLayout ll;
+            ll = (LinearLayout) thisView.findViewById(R.id.noInfoLayout);
+            ll.setVisibility(View.VISIBLE);
+            TextView text = (TextView) thisView.findViewById(R.id.noAllowance1);
+            text.setText("No registry were found with those parameters");
+            text = (TextView) thisView.findViewById(R.id.noAllowance2);
+            text.setText(":/");
+        }
+
+        sortInfoByDate();
+        drawTable();
+    }
 
 }

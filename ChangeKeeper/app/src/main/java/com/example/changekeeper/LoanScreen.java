@@ -21,14 +21,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class LoanScreen extends AppCompatActivity {
+public class LoanScreen extends AppCompatActivity implements SearchDialog2.SearchDialogListener2 {
     public static final String EXTRA_MESSAGE = "com.example.MainActivity.MESSAGE";
     private static final String TAG = "MainAct";
 
     private ActionBar toolbar;
 
     private ViewPager mPager;
-    private PagerAdapter pageAdapter;
+    private ScreenSlidePagerAdapter pageAdapter;
     public static int currentPage = 0;
     private static final int NUM_PAGES = 2;
 
@@ -142,6 +142,22 @@ public class LoanScreen extends AppCompatActivity {
 
     }
 
+    @Override
+    public void search(String from, String desc) {
+        if(mPager.getCurrentItem() == 0){
+            LoanScreenBorrowFragment fragment = (LoanScreenBorrowFragment) (pageAdapter).getItem(0);
+            fragment.search(from,desc);
+        }else{
+            LoanScreenLendFragment fragment = (LoanScreenLendFragment) (pageAdapter).getItem(0);
+            fragment.search(from,desc);
+        }
+
+    }
+
+    @Override
+    public void noUpdate() {
+
+    }
 }
 
 

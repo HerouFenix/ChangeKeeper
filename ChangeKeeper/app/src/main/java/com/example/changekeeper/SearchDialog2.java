@@ -3,7 +3,6 @@ package com.example.changekeeper;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,28 +12,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 
-import static android.support.constraint.Constraints.TAG;
-
-public class SearchDialog extends AppCompatDialogFragment implements AdapterView.OnItemSelectedListener{
+public class SearchDialog2 extends AppCompatDialogFragment implements AdapterView.OnItemSelectedListener{
     //Class used to create a new category for incomes/expenses
-    private SearchDialogListener listener;
+    private SearchDialogListener2 listener;
     private TextView mDisplayDate1;
 
     private View v;
@@ -46,13 +37,13 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
     private String date;
 
 
-    static SearchDialog newInstance() {
-        return new SearchDialog();
+    static SearchDialog2 newInstance() {
+        return new SearchDialog2();
     }
     private boolean confirmed = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_search_dialog, null);
+        View view = inflater.inflate(R.layout.layout_search_dialog2, null);
         View ultraView = view;
         this.v = view;
 
@@ -60,26 +51,9 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
         Button butt  = view.findViewById(R.id.conf);
         butt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Spinner spinner = v.findViewById(R.id.frequencyPicker);
-                String freq = "";
-                switch(spinner.getSelectedItem().toString()){
-                    case ("Income"):
-                        freq = "INCOME";
-                        break;
-                    case ("Expense"):
-                        freq = "EXPENSE";
-                        break;
-                    case ("Loan"):
-                        freq = "LOAN";
-                        break;
-
-                    case ("Any"):
-                        freq = "NULL";
-                        break;
-                }
+                Spinner spinner = v.findViewById(R.id.frequencyPicker2);
 
                 String date = "";
-                spinner = v.findViewById(R.id.frequencyPicker2);
                 switch(spinner.getSelectedItem().toString()){
                     case ("Today"):
                         date = "TODAY";
@@ -109,7 +83,7 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
                 }
 
                 Log.i("puto","lololo");
-                listener.search(date,freq,desc);
+                listener.search(date,desc);
                 dismiss();
 
 
@@ -125,23 +99,11 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
         });
 
 
-        buildTypeSpinner(view);
         buildDateSpinner(view,"NULL");
 
         return view;
     }
 
-    private void buildTypeSpinner(View v){
-        String[] items = {"WALLET","CARD"};
-        Spinner spinner = v.findViewById(R.id.frequencyPicker);
-
-        this.typeAdapter = ArrayAdapter.createFromResource(v.getContext(),R.array.types2,R.layout.spinner_item);
-        spinner.setOnItemSelectedListener(this);
-
-        this.typeAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setAdapter(this.typeAdapter);
-
-    }
 
     private void buildDateSpinner(View view, String date){
         Spinner spinner = v.findViewById(R.id.frequencyPicker2);
@@ -180,18 +142,7 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        if(parent.equals(this.typeAdapter)){
-            if(parent.getSelectedItem().toString().equals("INCOME")){
-                ((ImageView)this.v.findViewById(R.id.imageView)).setImageResource(R.drawable.ic_income);
 
-            }else if(parent.getSelectedItem().toString().equals("EXPENSE")){
-                ((ImageView)this.v.findViewById(R.id.imageView)).setImageResource(R.drawable.ic_expense);
-
-            }else{
-                ((ImageView)this.v.findViewById(R.id.imageView)).setImageResource(R.drawable.ic_borrow);
-            }
-
-        }else{
             Calendar cal = Calendar.getInstance();
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH);
@@ -257,7 +208,7 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
                 }
             }
         }
-    }
+
 
 
     @Override
@@ -279,7 +230,7 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
         super.onAttach(context);
 
         try {
-            listener = (SearchDialogListener) context;
+            listener = (SearchDialogListener2) context;
         } catch (ClassCastException e) {
             throw new ClassCastException((context.toString() + "Did not implement FrequencyDialogueListener"));
         }
@@ -293,8 +244,8 @@ public class SearchDialog extends AppCompatDialogFragment implements AdapterView
 
     }
 
-    public interface SearchDialogListener{
-        void search(String date, String type, String desc);
+    public interface SearchDialogListener2{
+        void search(String date, String desc);
         void noUpdate();
 
     }
