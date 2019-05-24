@@ -144,11 +144,13 @@ public class LoanScreenLendFragment extends Fragment {
 
     public void search(String date, String desc) {
         Log.i("Oi","boi");
+
+        this.loans.clear();
+        loadLoans();
+
         if(this.loans.size() == 0){
             return;
         }
-        this.loans.clear();
-        loadLoans();
 
         if(!date.equals("NULL")){
 

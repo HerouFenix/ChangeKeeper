@@ -217,13 +217,17 @@ public class AllInfoFragment extends Fragment{
 
     public void search(String date, String type, String desc) {
         Log.i("Oi","boi");
-        if(this.all.size() == 0){
-            return;
-        }
+
         this.all.clear();
+
         loadIncomes();
         loadExpenses();
         loadLoans();
+
+        if(this.all.size() == 0){
+            return;
+        }
+
 
         if(!date.equals("NULL")){
 

@@ -131,11 +131,14 @@ public class AllowanceInfoFragment extends Fragment {
 
     public void search(String date, String desc) {
         Log.i("Oi","boi");
+
+        this.incomes.clear();
+        loadIncomes();
+
         if(this.incomes.size() == 0){
             return;
         }
-        this.incomes.clear();
-        loadIncomes();
+
 
         if(!date.equals("NULL")){
 

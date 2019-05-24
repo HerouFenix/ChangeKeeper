@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -35,6 +36,15 @@ public class SubscriptionScreen extends AppCompatActivity implements SearchDialo
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         toolbar.setCustomView(R.layout.layout_actionbar);
         ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("My Subscriptions");
+
+        ImageButton butt  = toolbar.getCustomView().findViewById(R.id.settings);
+        butt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("puto","lololo");
+                Intent intent = new Intent(v.getContext(), SettingsScreen.class);
+                startActivity(intent);
+            }
+        });
 
         Intent intent = getIntent();
 

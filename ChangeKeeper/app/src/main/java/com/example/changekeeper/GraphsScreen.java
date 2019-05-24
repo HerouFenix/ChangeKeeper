@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -45,6 +46,15 @@ public class GraphsScreen extends AppCompatActivity  implements  SearchDialog.Se
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         toolbar.setCustomView(R.layout.layout_actionbar);
         ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("Graphs & Info");
+
+        ImageButton butt  = toolbar.getCustomView().findViewById(R.id.settings);
+        butt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("puto","lololo");
+                Intent intent = new Intent(v.getContext(), SettingsScreen.class);
+                startActivity(intent);
+            }
+        });
 
         this.mPager = (ViewPager) findViewById(R.id.typeSelector);
         this.pageAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());

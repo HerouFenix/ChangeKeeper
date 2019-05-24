@@ -43,6 +43,15 @@ public class LoanScreen extends AppCompatActivity implements SearchDialog2.Searc
         toolbar.setCustomView(R.layout.layout_actionbar);
         ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("My Loans");
 
+        ImageButton butt  = toolbar.getCustomView().findViewById(R.id.settings);
+        butt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("puto","lololo");
+                Intent intent = new Intent(v.getContext(), SettingsScreen.class);
+                startActivity(intent);
+            }
+        });
+
         this.mPager = (ViewPager) findViewById(R.id.typeSelector);
         this.pageAdapter = new LoanScreen.ScreenSlidePagerAdapter(getSupportFragmentManager());
         this.mPager.setAdapter(pageAdapter);

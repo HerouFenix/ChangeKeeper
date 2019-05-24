@@ -10,9 +10,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import android.support.v4.app.FragmentManager;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,8 +65,18 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
 
         toolbar = getSupportActionBar();
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        toolbar.setDisplayShowCustomEnabled(true);
         toolbar.setCustomView(R.layout.layout_actionbar);
         ((TextView)toolbar.getCustomView().findViewById(R.id.ourTitle)).setText("ChangeKeeper");
+
+        ImageButton butt  = toolbar.getCustomView().findViewById(R.id.settings);
+        butt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("puto","lololo");
+                Intent intent = new Intent(v.getContext(), SettingsScreen.class);
+                startActivity(intent);
+            }
+        });
 
         this.mPager = (ViewPager) findViewById(R.id.typeSelector);
         this.pageAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -115,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
         Log.v(TAG,"HELLOOOOOOOOOOOOOOOOOOOOOOOO :D");
 
     }
+
 
     public void changeView(){
         if(mPager.getCurrentItem()==0){
@@ -432,11 +446,10 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
                             test = true;
                         }
                     }else{
-                        if(!temp[10].equals("NULL") && (cal.after(cal2) || cal.toString().equals(cal2.toString()))){
+                        if(!temp[10].equals("PAID") && (cal.after(cal2) || cal.toString().equals(cal2.toString()))){
                             Log.i(TAG,"oioi" + line);
                             updateAmounts(temp[1],temp[0]);
 
-                            temp[10] = "PAID";
                             line =  temp[0] + " - " +
                                     temp[1] + " - " +
                                     temp[2] + " - " +
@@ -447,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements TransferDialog.Tr
                                     temp[7] + " - " +
                                     "[PAID] "+ temp[8] + " - " +
                                     temp[9] + " - " +
-                                    temp[10];
+                                    "PAID";
                             test = true;
                         }
                     }
