@@ -277,6 +277,12 @@ public class RegExpenseScreen extends AppCompatActivity implements AdapterView.O
     }
 
 
+    @Override
+    public void onBackPressed() {
+        ExitDialog exitDialog = ExitDialog.newInstance();
+        exitDialog.show(getSupportFragmentManager(), "Exit Dialogue");
+    }
+
     private void buildFrequencySpinner(String lol){
         String[] items;
         if(!lol.equals("NULL"))

@@ -198,6 +198,12 @@ public class RegLoanScreen extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
+    @Override
+    public void onBackPressed() {
+        ExitDialog exitDialog = ExitDialog.newInstance();
+        exitDialog.show(getSupportFragmentManager(), "Exit Dialogue");
+    }
+
     private void buildDestinationSpinner(){
         String[] items = {"WALLET","CARD"};
         Spinner spinner = findViewById(R.id.destination);

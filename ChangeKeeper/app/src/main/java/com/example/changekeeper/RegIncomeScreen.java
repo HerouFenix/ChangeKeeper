@@ -182,6 +182,12 @@ public class RegIncomeScreen extends AppCompatActivity implements AdapterView.On
     }
 
     @Override
+    public void onBackPressed() {
+        ExitDialog exitDialog = ExitDialog.newInstance();
+        exitDialog.show(getSupportFragmentManager(), "Exit Dialogue");
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
