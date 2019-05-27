@@ -211,7 +211,7 @@ public class LoanScreenBorrowFragment extends Fragment {
         if(!desc.equals("")){
             for(int i = 0 ; i < this.loans.size() ; i++){
                 String line = this.loans.get(i);
-                if(line.split(" - ")[8].equals(desc))
+                if(line.split(" - ")[8].contains(desc))
                     continue;
                 else {
                     this.loans.remove(line);

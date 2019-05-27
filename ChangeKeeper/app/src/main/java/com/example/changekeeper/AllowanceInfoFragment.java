@@ -213,7 +213,7 @@ public class AllowanceInfoFragment extends Fragment {
         if(!desc.equals("")){
             for(int i = 0 ; i < this.incomes.size() ; i++){
                 String line = this.incomes.get(i);
-                if(line.split(" - ")[8].equals(desc))
+                if(line.split(" - ")[8].contains(desc))
                     continue;
                 else {
                     this.incomes.remove(line);
