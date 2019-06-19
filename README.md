@@ -10,4 +10,4 @@ That is the purpose of this repository.
 
 ## Authors
 * **Diogo Silva** - [HerouFenix](https://github.com/HerouFenix)
-* **Vasco Ramos** - [BlasphemyCoder](https://github.com/BlasphemyCoder)
+* **Vasco Ramos** - [vascoalramos](https://github.com/vascoalramos)
